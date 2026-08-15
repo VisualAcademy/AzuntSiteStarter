@@ -1,0 +1,33 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Azunt.Web/Azunt.Web.csproj" />
+  </Folder>
+  <Folder Name="/docs/">
+    <File Path="docs/Azunt.Docs/docfx.json" />
+    <File Path="docs/Azunt.Docs/toc.yml" />
+    <File Path="docs/Azunt.Docs/index.md" />
+    <File Path="docs/Azunt.Docs/overview.md" />
+    <File Path="docs/Azunt.Docs/getting-started/site-structure.md" />
+    <File Path="docs/Azunt.Docs/getting-started/build-and-publish.md" />
+    <File Path="docs/Azunt.Docs/getting-started/development-workflow.md" />
+    <File Path="docs/Azunt.Docs/guides/mvc-shells.md" />
+    <File Path="docs/Azunt.Docs/guides/authentication.md" />
+    <File Path="docs/Azunt.Docs/guides/protected-docs.md" />
+    <File Path="docs/Azunt.Docs/code/razor.md" />
+    <File Path="docs/Azunt.Docs/code/routing.md" />
+    <File Path="docs/Azunt.Docs/protected/overview.md" />
+    <File Path="docs/Azunt.Docs/templates/azunt/public/main.css" />
+    <File Path="docs/Azunt.Docs/templates/azunt/public/main.js" />
+    <File Path="docs/Azunt.Docs/templates/azunt/public/razor.js" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path="README.md" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path=".editorconfig" />
+    <File Path="Build.cmd" />
+    <File Path="Run.cmd" />
+    <File Path="Publish.cmd" />
+  </Folder>
+</Solution>

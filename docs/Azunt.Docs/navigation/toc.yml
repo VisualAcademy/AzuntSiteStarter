@@ -1,0 +1,40 @@
+- name: Documentation home
+  href: ../index.md
+
+- name: Overview
+  href: ../overview.md
+
+- name: Getting started
+  expanded: true
+  items:
+    - name: Site structure
+      href: ../getting-started/site-structure.md
+    - name: Build and publish
+      href: ../getting-started/build-and-publish.md
+    - name: Visual Studio development workflow
+      href: ../getting-started/development-workflow.md
+
+- name: Guides
+  expanded: true
+  items:
+    - name: MVC and application shells
+      href: ../guides/mvc-shells.md
+    - name: Authentication
+      href: ../guides/authentication.md
+    - name: Protected documentation
+      href: ../guides/protected-docs.md
+    - name: Dashboard tree navigation
+      href: ../guides/dashboard-tree-navigation.md
+
+- name: Code samples
+  expanded: true
+  items:
+    - name: Razor and CSHTML
+      href: ../code/razor.md
+    - name: ASP.NET Core routing
+      href: ../code/routing.md
+
+- name: Protected
+  items:
+    - name: Overview
+      href: /docs/private/

@@ -1,0 +1,22 @@
+@model Azunt.Web.Models.Dashboard.DashboardNavigationViewModel
+@{
+    string? currentGroup = null;
+}
+
+<nav class="dashboard-nav" aria-label="Dashboard navigation">
+    <ul class="dashboard-nav-root">
+        @foreach (var item in Model.Items)
+        {
+            if (!string.Equals(currentGroup, item.Group, StringComparison.Ordinal))
+            {
+                currentGroup = item.Group;
+                if (!string.IsNullOrWhiteSpace(currentGroup))
+                {
+                    <li class="dashboard-nav-section-label" aria-hidden="true">@currentGroup</li>
+                }
+            }
+
+            @await Html.PartialAsync("_DashboardNavNode", item)
+        }
+    </ul>
+</nav>

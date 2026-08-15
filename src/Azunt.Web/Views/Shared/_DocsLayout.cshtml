@@ -1,0 +1,86 @@
+@using Azunt.Web.Models.Docs
+@{
+    var docsModel = Model as DocsPageViewModel;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"] - Azunt Docs</title>
+  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/docs-shell.css" asp-append-version="true" />
+</head>
+<body class="docs-body">
+  <header class="docs-topbar">
+    <a class="brand" href="/"><span class="brand-mark">A</span><span>Azunt</span></a>
+    <a class="docs-name" href="/docs/">Docs</a>
+    <div class="docs-search" aria-hidden="true"><span>⌕</span><span>Search documentation</span></div>
+    <nav aria-label="Site navigation">
+      <a href="/">Public</a>
+      <a href="/dashboard">Dashboard</a>
+      <a href="/account/profile">Account</a>
+    </nav>
+  </header>
+
+  <div class="docs-frame">
+    <aside class="docs-sidebar" aria-label="Documentation navigation">
+      <a class="docs-tree-root" href="/docs/">Documentation</a>
+      <a class="docs-tree-root" href="/docs/overview">Overview</a>
+
+      <details open>
+        <summary>Getting started</summary>
+        <div class="docs-tree-children">
+          <a href="/docs/getting-started/site-structure">Site structure</a>
+          <a href="/docs/getting-started/build-and-publish">Build and publish</a>
+          <a href="/docs/getting-started/development-workflow">Visual Studio workflow</a>
+        </div>
+      </details>
+
+      <details open>
+        <summary>Guides</summary>
+        <div class="docs-tree-children">
+          <a href="/docs/guides/mvc-shells">MVC and application shells</a>
+          <a href="/docs/guides/authentication">Authentication</a>
+          <a href="/docs/guides/protected-docs">Protected documentation</a>
+          <a href="/docs/guides/dashboard-tree-navigation">Dashboard navigation</a>
+        </div>
+      </details>
+
+      <details open>
+        <summary>Code</summary>
+        <div class="docs-tree-children">
+          <a href="/docs/code/razor">Razor &amp; CSHTML</a>
+          <a href="/docs/code/routing">ASP.NET Core routing</a>
+        </div>
+      </details>
+
+      <details open>
+        <summary>Protected</summary>
+        <div class="docs-tree-children">
+          <a class="active" href="/docs/private/">Overview</a>
+        </div>
+      </details>
+    </aside>
+
+    <main class="docs-content">
+      @RenderBody()
+    </main>
+
+    <aside class="docs-affix" aria-label="On this page">
+      @if (docsModel?.OnThisPage.Count > 0)
+      {
+        <div class="docs-affix-title">On this page</div>
+        <nav>
+          @foreach (var heading in docsModel.OnThisPage)
+          {
+            <a class="@(heading.Level == 3 ? "level-3" : string.Empty)" href="#@heading.Id">@heading.Text</a>
+          }
+        </nav>
+      }
+    </aside>
+  </div>
+
+  <script src="~/js/simple-code-highlight.js" asp-append-version="true"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+@model Azunt.Web.Models.Dashboard.DashboardPageViewModel
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="portal-breadcrumb">@Model.Breadcrumb.Replace(" / ", "  /  ")</div>
+<div class="portal-title-row">
+  <div>
+    <h1>@Model.Title</h1>
+    <p>@Model.Description</p>
+  </div>
+  <button class="portal-primary" type="button">+ New item</button>
+</div>
+
+<section class="dashboard-section-grid">
+  @foreach (var item in Model.Highlights)
+  {
+    <article class="dashboard-section-card">
+      <span class="dashboard-section-icon">◇</span>
+      <div><h2>@item</h2></div>
+      <span class="dashboard-section-arrow">→</span>
+    </article>
+  }
+</section>
+
+<section class="portal-panel dashboard-note-panel">
+  <div class="panel-heading">
+    <div>
+      <h2>Navigation structure</h2>
+      <p>The active branch opens automatically.</p>
+    </div>
+  </div>
+  <div class="dashboard-note-copy">
+    Menu entries are defined in <code>DashboardNavigationViewComponent.cs</code> and rendered recursively by <code>_DashboardNavNode.cshtml</code>.
+  </div>
+</section>

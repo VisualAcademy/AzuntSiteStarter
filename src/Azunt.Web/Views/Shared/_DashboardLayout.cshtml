@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"] - Azunt Portal</title>
+  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/dashboard.css" asp-append-version="true" />
+</head>
+<body class="dashboard-body">
+  <header class="portal-topbar">
+    <a class="portal-app-launcher" href="/" aria-label="Public site" title="Public site">⋮⋮⋮</a>
+    <a class="portal-brand" href="/dashboard"><span class="brand-mark small">A</span><span>Azunt Portal</span></a>
+    <button id="sidebarToggle" class="portal-hamburger" type="button" aria-label="Hide navigation" title="Hide navigation" aria-expanded="true">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="portal-shortcuts" aria-label="Portal shortcuts">
+      <a href="/dashboard">⌂ Dashboard</a>
+      <a href="/dashboard/resources">＋ Resources</a>
+      <a href="/docs/">Docs</a>
+    </nav>
+    <div class="portal-actions">
+      <a href="/">Public site</a>
+      <a class="avatar" href="/account/profile">@((User.Identity?.Name ?? "U")[0].ToString().ToUpperInvariant())</a>
+    </div>
+  </header>
+
+  <div class="portal-frame">
+    <aside id="portalSidebar" class="portal-sidebar">
+      <div class="portal-sidebar-scroll">
+        @await Component.InvokeAsync("DashboardNavigation")
+      </div>
+      <button id="sidebarFooterToggle" class="portal-sidebar-footer-toggle" type="button" aria-label="Collapse navigation" title="Collapse navigation">
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.4 4.8 7.2 10l5.2 5.2" /></svg>
+      </button>
+    </aside>
+
+    <div id="dashboardNavFlyout"
+         class="dashboard-nav-flyout"
+         aria-hidden="true"
+         aria-label="Dashboard submenu">
+      <div id="dashboardNavFlyoutContent" class="dashboard-nav-flyout-content"></div>
+    </div>
+
+    <main class="portal-content">
+      @RenderBody()
+    </main>
+  </div>
+
+  <script src="~/js/dashboard.js" asp-append-version="true"></script>
+  @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

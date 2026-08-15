@@ -1,0 +1,40 @@
+@{
+    Layout = "_DashboardLayout";
+    ViewData["Title"] = "Overview";
+}
+
+<div class="portal-breadcrumb">Home <span>/</span> Overview</div>
+<div class="portal-title-row">
+  <div><h1>Overview</h1><p>Signed in as @(User.Identity?.Name).</p></div>
+  <button class="portal-primary" type="button">+ Create resource</button>
+</div>
+
+<section class="metric-grid" id="resources">
+  <article><span class="metric-label">Active resources</span><strong>24</strong><small>4 resource groups</small></article>
+  <article><span class="metric-label">Healthy services</span><strong>99.9%</strong><small>Local status</small></article>
+  <article><span class="metric-label">Documentation</span><strong>12</strong><small>Public and protected pages</small></article>
+  <article><span class="metric-label">Identity</span><strong>In-memory</strong><small>Cleared on application restart</small></article>
+</section>
+
+<div class="portal-grid">
+  <section class="portal-panel wide">
+    <div class="panel-heading"><div><h2>Resource activity</h2><p>Recent build activity</p></div><button type="button">⋯</button></div>
+    <div class="chart-area" aria-label="Resource activity chart">
+      <span style="height:34%"></span><span style="height:52%"></span><span style="height:43%"></span><span style="height:72%"></span><span style="height:61%"></span><span style="height:82%"></span><span style="height:68%"></span><span style="height:90%"></span><span style="height:76%"></span><span style="height:88%"></span>
+    </div>
+  </section>
+  <section class="portal-panel">
+    <div class="panel-heading"><div><h2>Quick access</h2><p>Common destinations</p></div></div>
+    <div class="quick-links"><a href="/docs/">Public documentation <span>→</span></a><a href="/docs/private/">Protected documentation <span>→</span></a><a href="/account/profile">Account profile <span>→</span></a><a href="/">Public site <span>→</span></a></div>
+  </section>
+</div>
+
+<section class="portal-panel" id="activity">
+  <div class="panel-heading"><div><h2>Recent activity</h2><p>Local data</p></div><button type="button">View all</button></div>
+  <div class="activity-table">
+    <div class="table-head"><span>Operation</span><span>Resource</span><span>Status</span><span>When</span></div>
+    <div><span>Build documentation</span><span>Azunt.Docs</span><span class="status success">Succeeded</span><span>2 minutes ago</span></div>
+    <div><span>Sign in</span><span>demo@azunt.local</span><span class="status success">Succeeded</span><span>Just now</span></div>
+    <div><span>Build application</span><span>Azunt.Web</span><span class="status neutral">Local</span><span>Today</span></div>
+  </div>
+</section>

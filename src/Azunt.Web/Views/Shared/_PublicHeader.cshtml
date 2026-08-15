@@ -1,0 +1,45 @@
+<header class="public-header">
+  <div class="public-nav shell-width">
+    <a class="brand" href="/" aria-label="Azunt home">
+      <span class="brand-mark">A</span>
+      <span>Azunt</span>
+    </a>
+
+    <nav class="desktop-nav" aria-label="Primary navigation">
+      <div class="mega-trigger">
+        <button class="nav-link nav-button" type="button">Products <span aria-hidden="true">⌄</span></button>
+        <div class="mega-menu">
+          <div>
+            <span class="eyebrow">Build</span>
+            <a href="/products"><strong>Application platform</strong><small>Reusable shells and product modules</small></a>
+            <a href="/docs/"><strong>Developer documentation</strong><small>DocFX-powered guides and code</small></a>
+          </div>
+          <div>
+            <span class="eyebrow">Operate</span>
+            <a href="/dashboard"><strong>Cloud dashboard</strong><small>Manage resources and activity</small></a>
+            <a href="/account/profile"><strong>Account</strong><small>Identity and profile experience</small></a>
+          </div>
+        </div>
+      </div>
+      <a class="nav-link" href="/docs/">Docs</a>
+      <a class="nav-link" href="/pricing">Pricing</a>
+      <a class="nav-link" href="/dashboard">Dashboard</a>
+    </nav>
+
+    <div class="nav-actions">
+      @if (User.Identity?.IsAuthenticated == true)
+      {
+        <a class="text-action" href="/account/profile">@User.Identity.Name</a>
+        <form method="post" action="/account/logout">
+          @Html.AntiForgeryToken()
+          <button class="button button-quiet" type="submit">Sign out</button>
+        </form>
+      }
+      else
+      {
+        <a class="text-action" href="/account/login">Sign in</a>
+        <a class="button button-primary" href="/account/register">Start free</a>
+      }
+    </div>
+  </div>
+</header>

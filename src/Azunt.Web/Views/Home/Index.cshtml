@@ -1,0 +1,54 @@
+@{
+    ViewData["Title"] = "ASP.NET Core site";
+}
+
+<section class="hero-section">
+  <div class="shell-width hero-grid">
+    <div class="hero-copy">
+      <span class="hero-kicker">ASP.NET Core 10</span>
+      <h1>Public, docs, dashboard, and account pages in one site.</h1>
+      <p>Each area uses its own layout and navigation while sharing the same ASP.NET Core host, authentication, and build process.</p>
+      <div class="hero-actions">
+        <a class="button button-primary button-large" href="/dashboard">Open dashboard</a>
+        <a class="button button-outline button-large" href="/docs/">Documentation</a>
+      </div>
+      <div class="hero-note"><span class="status-dot"></span> .NET 10 · DocFX 2.78.5 · ASP.NET Core Identity</div>
+    </div>
+    <div class="cloud-visual" aria-hidden="true">
+      <div class="visual-toolbar"><span></span><span></span><span></span><strong>Azunt</strong></div>
+      <div class="visual-body">
+        <div class="visual-sidebar"></div>
+        <div class="visual-canvas">
+          <div class="visual-heading"></div>
+          <div class="visual-card-row"><i></i><i></i><i></i></div>
+          <div class="visual-chart"><b></b><b></b><b></b><b></b><b></b><b></b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="trust-strip">
+  <div class="shell-width"><span>ASP.NET Core 10</span><span>DocFX 2.78.5</span><span>Identity</span><span>EF Core InMemory</span></div>
+</section>
+
+<section class="feature-section shell-width">
+  <div class="section-heading"><span class="eyebrow">Site areas</span><h2>Four shells, one host.</h2></div>
+  <div class="feature-grid">
+    <article><span class="feature-icon">☁</span><h3>Public</h3><p>Landing, product, and pricing pages use the public layout and navigation.</p><a href="/products">Public pages →</a></article>
+    <article><span class="feature-icon">⌘</span><h3>Docs</h3><p>DocFX builds public Markdown. Protected Markdown is served through MVC after authorization.</p><a href="/docs/">Documentation →</a></article>
+    <article><span class="feature-icon">▦</span><h3>Dashboard</h3><p>The dashboard uses authenticated routes, a multi-level sidebar, compact rail, and flyout navigation.</p><a href="/dashboard">Dashboard →</a></article>
+    <article><span class="feature-icon">◉</span><h3>Account</h3><p>Sign-in, registration, profile, return URL, and access-denied pages use a separate account layout.</p><a href="/account/login">Sign in →</a></article>
+  </div>
+</section>
+
+<section class="developer-band">
+  <div class="shell-width developer-grid">
+    <div><span class="eyebrow light">Project structure</span><h2>Keep source boundaries clear.</h2><p>Public docs stay static. Protected docs, dashboard pages, and account routes remain inside ASP.NET Core.</p></div>
+    <pre><code>azunt.com/
+├─ docs/          DocFX
+├─ docs/private/  MVC + Authorize
+├─ dashboard/     MVC + Authorize
+└─ account/       Identity</code></pre>
+  </div>
+</section>

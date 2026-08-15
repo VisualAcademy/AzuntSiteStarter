@@ -1,0 +1,15 @@
+@model DocsPageViewModel
+@{
+    Layout = "_DocsLayout";
+    ViewData["Title"] = Model.Title;
+}
+<div class="docs-breadcrumb">
+  <a href="/docs/">Docs</a><span>/</span><span>Protected</span><span>/</span><span>@Model.Title</span>
+</div>
+<div class="protected-banner">
+  <strong>Protected documentation</strong>
+  <span>Access is controlled by ASP.NET Core authorization.</span>
+</div>
+<article class="markdown-body">
+  @Html.Raw(Model.Html)
+</article>
