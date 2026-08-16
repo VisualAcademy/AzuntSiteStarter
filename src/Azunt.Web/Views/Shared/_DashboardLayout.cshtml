@@ -9,7 +9,19 @@
 </head>
 <body class="dashboard-body">
   <header class="portal-topbar">
-    <a class="portal-app-launcher" href="/" aria-label="Public site" title="Public site">⋮⋮⋮</a>
+    <button id="appLauncherToggle"
+            class="portal-app-launcher"
+            type="button"
+            aria-label="Open Azunt apps"
+            aria-controls="appLauncherMenu"
+            aria-expanded="false"
+            title="Apps">
+      <span class="portal-waffle" aria-hidden="true">
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+        <span></span><span></span><span></span>
+      </span>
+    </button>
     <a class="portal-brand" href="/dashboard"><span class="brand-mark small">A</span><span>Azunt Portal</span></a>
     <button id="sidebarToggle" class="portal-hamburger" type="button" aria-label="Hide navigation" title="Hide navigation" aria-expanded="true">
       <span></span><span></span><span></span>
@@ -24,6 +36,58 @@
       <a class="avatar" href="/account/profile">@((User.Identity?.Name ?? "U")[0].ToString().ToUpperInvariant())</a>
     </div>
   </header>
+
+  <section id="appLauncherMenu" class="portal-app-menu" aria-hidden="true" aria-label="Azunt apps">
+    <div class="portal-app-menu-header">
+      <div>
+        <strong>Azunt</strong>
+        <span>Sites and tools</span>
+      </div>
+      <a href="/">Home</a>
+    </div>
+
+    <nav class="portal-app-grid" aria-label="Azunt applications">
+      <a class="portal-app-item" href="/">
+        <span class="portal-app-icon app-icon-home"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#home"></use></svg></span>
+        <span>Public site</span>
+      </a>
+      <a class="portal-app-item" href="/dashboard">
+        <span class="portal-app-icon app-icon-dashboard"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#dashboard"></use></svg></span>
+        <span>Dashboard</span>
+      </a>
+      <a class="portal-app-item" href="/dashboard/resources">
+        <span class="portal-app-icon app-icon-resources"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#resources"></use></svg></span>
+        <span>Resources</span>
+      </a>
+      <a class="portal-app-item" href="/docs/">
+        <span class="portal-app-icon app-icon-docs"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#docs"></use></svg></span>
+        <span>Documentation</span>
+      </a>
+      <a class="portal-app-item" href="/docs/private/">
+        <span class="portal-app-icon app-icon-protected"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#shield"></use></svg></span>
+        <span>Protected docs</span>
+      </a>
+      <a class="portal-app-item" href="/account/profile">
+        <span class="portal-app-icon app-icon-account"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#account"></use></svg></span>
+        <span>Account</span>
+      </a>
+      <a class="portal-app-item" href="/products">
+        <span class="portal-app-icon app-icon-products"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#products"></use></svg></span>
+        <span>Products</span>
+      </a>
+      <a class="portal-app-item" href="/pricing">
+        <span class="portal-app-icon app-icon-pricing"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#pricing"></use></svg></span>
+        <span>Pricing</span>
+      </a>
+    </nav>
+
+    <div class="portal-app-menu-divider"></div>
+    <div class="portal-app-quick-links">
+      <a href="/dashboard/resources">Browse resources <span aria-hidden="true">→</span></a>
+      <a href="/docs/getting-started/site-structure">Getting started <span aria-hidden="true">→</span></a>
+      <a href="/account/profile">Profile and account <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
 
   <div class="portal-frame">
     <aside id="portalSidebar" class="portal-sidebar">

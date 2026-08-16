@@ -200,6 +200,12 @@ The two sidebar controls have separate behavior:
 
 In compact mode, parent icons open a dark flyout tree. Flyout list markers are removed; hierarchy is shown with icons, indentation, and chevrons.
 
+## App launcher
+
+The waffle button in the dashboard header opens an app launcher with links to the public site, dashboard, resources, documentation, protected documentation, account, products, and pricing. It also includes quick links for common destinations.
+
+The launcher is implemented in `_DashboardLayout.cshtml`, `dashboard.css`, and `dashboard.js`. Its tile icons use the local `dashboard-icons.svg` sprite.
+
 ## Main extension points
 
 The current solution keeps one executable web project. If the codebase grows, common extraction points are:

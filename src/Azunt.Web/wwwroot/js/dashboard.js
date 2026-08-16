@@ -7,6 +7,8 @@
   const footerToggle = document.getElementById('sidebarFooterToggle');
   const flyout = document.getElementById('dashboardNavFlyout');
   const flyoutContent = document.getElementById('dashboardNavFlyoutContent');
+  const appLauncherToggle = document.getElementById('appLauncherToggle');
+  const appLauncherMenu = document.getElementById('appLauncherMenu');
   const treeState = readTreeState();
 
   if (localStorage.getItem(compactStorageKey) === 'true') {
@@ -21,6 +23,11 @@
   // - footer arrow: expanded sidebar <-> compact icon rail
   topToggle?.addEventListener('click', toggleSidebarVisibility);
   footerToggle?.addEventListener('click', toggleSidebarCompactness);
+  appLauncherToggle?.addEventListener('click', event => {
+    event.preventDefault();
+    event.stopPropagation();
+    toggleAppLauncher();
+  });
 
   document.addEventListener('click', event => {
     const toggle = event.target.closest?.('[data-nav-toggle]');
@@ -45,10 +52,17 @@
     if (flyout?.classList.contains('is-open') && !flyout.contains(event.target) && !sidebar?.contains(event.target)) {
       closeFlyout();
     }
+
+    if (appLauncherMenu?.classList.contains('is-open') && !appLauncherMenu.contains(event.target) && !appLauncherToggle?.contains(event.target)) {
+      closeAppLauncher();
+    }
   });
 
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') closeFlyout();
+    if (event.key === 'Escape') {
+      closeFlyout();
+      closeAppLauncher();
+    }
   });
 
   window.addEventListener('resize', () => {
@@ -58,11 +72,13 @@
   function toggleSidebarVisibility() {
     body.classList.toggle('sidebar-hidden');
     closeFlyout();
+    closeAppLauncher();
     syncToggleLabels();
   }
 
   function toggleSidebarCompactness() {
     const compact = body.classList.toggle('sidebar-collapsed');
+    closeAppLauncher();
     localStorage.setItem(compactStorageKey, String(compact));
     closeFlyout();
     syncToggleLabels();
@@ -173,6 +189,25 @@
       const expanded = active || (key && Object.prototype.hasOwnProperty.call(treeState, key) ? treeState[key] === true : false);
       setExpanded(node, button, children, expanded);
     });
+  }
+
+  function toggleAppLauncher() {
+    if (!appLauncherMenu || !appLauncherToggle) return;
+
+    const open = !appLauncherMenu.classList.contains('is-open');
+    closeFlyout();
+    appLauncherMenu.classList.toggle('is-open', open);
+    appLauncherMenu.setAttribute('aria-hidden', String(!open));
+    appLauncherToggle.classList.toggle('is-open', open);
+    appLauncherToggle.setAttribute('aria-expanded', String(open));
+  }
+
+  function closeAppLauncher() {
+    if (!appLauncherMenu || !appLauncherToggle) return;
+    appLauncherMenu.classList.remove('is-open');
+    appLauncherMenu.setAttribute('aria-hidden', 'true');
+    appLauncherToggle.classList.remove('is-open');
+    appLauncherToggle.setAttribute('aria-expanded', 'false');
   }
 
   function closeFlyout() {

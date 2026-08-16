@@ -25,6 +25,8 @@
       href: ../guides/protected-docs.md
     - name: Dashboard tree navigation
       href: ../guides/dashboard-tree-navigation.md
+    - name: Dashboard app launcher
+      href: ../guides/app-launcher.md
 
 - name: Code samples
   expanded: true
