@@ -1,0 +1,34 @@
+@model Azunt.Web.Models.Markdown.MarkdownNavigationItemViewModel
+@{
+    var hasChildren = Model.Items.Count > 0;
+}
+
+@if (hasChildren)
+{
+  <details class="markdown-tree-group" open="@Model.IsInActivePath">
+    <summary>
+      @if (!string.IsNullOrWhiteSpace(Model.Href))
+      {
+        <a class="@(Model.IsActive ? "active" : string.Empty)" href="@Model.Href">@Model.Name</a>
+      }
+      else
+      {
+        <span>@Model.Name</span>
+      }
+    </summary>
+    <div class="markdown-tree-children">
+      @foreach (var child in Model.Items)
+      {
+        <partial name="_MarkdownNavNode" model="child" />
+      }
+    </div>
+  </details>
+}
+else if (!string.IsNullOrWhiteSpace(Model.Href))
+{
+  <a class="markdown-tree-link @(Model.IsActive ? "active" : string.Empty)" href="@Model.Href">@Model.Name</a>
+}
+else
+{
+  <span class="markdown-tree-label">@Model.Name</span>
+}

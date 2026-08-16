@@ -1,0 +1,86 @@
+@model Azunt.Web.Models.Markdown.MarkdownPageViewModel
+@{
+    Layout = "_PublicLayout";
+    ViewData["Title"] = Model.Title;
+    ViewData["CanonicalUrl"] = Model.CanonicalUrl;
+    var hasNavigation = Model.Navigation.Count > 0;
+}
+
+@section Styles {
+  <link rel="stylesheet" href="~/css/markdown-content.css" asp-append-version="true" />
+}
+
+<div class="markdown-public-container shell-width">
+  <div class="markdown-docs-frame @(hasNavigation ? string.Empty : "without-navigation")">
+    @if (hasNavigation)
+    {
+      <aside class="markdown-docs-sidebar" aria-label="Local documentation navigation">
+        <div class="markdown-docs-sidebar-heading">
+          @if (!string.IsNullOrWhiteSpace(Model.RootUrl))
+          {
+            <a href="@Model.RootUrl">@Model.RootTitle</a>
+          }
+          else
+          {
+            <strong>@Model.RootTitle</strong>
+          }
+          @if (!string.Equals(Model.NavigationTitle, Model.RootTitle, StringComparison.OrdinalIgnoreCase))
+          {
+            <span>@Model.NavigationTitle</span>
+          }
+        </div>
+        <nav class="markdown-tree">
+          @foreach (var item in Model.Navigation)
+          {
+            <partial name="_MarkdownNavNode" model="item" />
+          }
+        </nav>
+      </aside>
+    }
+
+    <main class="markdown-docs-content">
+      @if (Model.Breadcrumbs.Count > 0)
+      {
+        <nav class="markdown-breadcrumb" aria-label="Breadcrumb">
+          @for (var i = 0; i < Model.Breadcrumbs.Count; i++)
+          {
+            var item = Model.Breadcrumbs[i];
+            @if (i > 0)
+            {
+              <span aria-hidden="true">/</span>
+            }
+            @if (!string.IsNullOrWhiteSpace(item.Href))
+            {
+              <a href="@item.Href">@item.Name</a>
+            }
+            else
+            {
+              <span>@item.Name</span>
+            }
+          }
+        </nav>
+      }
+
+      <article class="markdown-content-body">
+        @Html.Raw(Model.Html)
+      </article>
+    </main>
+
+    <aside class="markdown-docs-affix" aria-label="On this page">
+      @if (Model.OnThisPage.Count > 0)
+      {
+        <div class="markdown-docs-affix-title">On this page</div>
+        <nav>
+          @foreach (var heading in Model.OnThisPage)
+          {
+            <a class="@(heading.Level == 3 ? "level-3" : string.Empty)" href="#@heading.Id">@heading.Text</a>
+          }
+        </nav>
+      }
+    </aside>
+  </div>
+</div>
+
+@section Scripts {
+  <script src="~/js/simple-code-highlight.js" asp-append-version="true"></script>
+}

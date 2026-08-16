@@ -1,0 +1,8 @@
+- name: Authentication
+  href: /resources/authentication
+
+- name: Routing
+  href: /resources/routing
+
+- name: Site structure
+  href: /resources/site-structure

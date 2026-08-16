@@ -15,11 +15,45 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" />
     <PackageReference Include="Markdig" />
+    <PackageReference Include="YamlDotNet" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="../../docs/Azunt.Docs/protected/**/*.md">
       <Link>ProtectedDocs/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!-- Public-layout course Markdown and local TOC files are rendered by MVC. -->
+  <ItemGroup>
+    <Content Include="../../docs/Azunt.Docs/courses/**/*.md">
+      <Link>CourseDocs/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="../../docs/Azunt.Docs/courses/**/*.yml">
+      <Link>CourseDocs/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--
+    Public DocFX Markdown can also be mapped explicitly to MVC routes. Keep a runtime
+    copy outside wwwroot so controllers can render the same source with a different shell.
+  -->
+  <ItemGroup>
+    <Content Include="../../docs/Azunt.Docs/**/*.md"
+             Exclude="../../docs/Azunt.Docs/protected/**/*.md;../../docs/Azunt.Docs/courses/**/*.md">
+      <Link>MarkdownDocs/%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="../../docs/Azunt.Docs/**/*.yml"
+             Exclude="../../docs/Azunt.Docs/protected/**/*.yml;../../docs/Azunt.Docs/courses/**/*.yml">
+      <Link>MarkdownDocs/%(RecursiveDir)%(Filename)%(Extension)</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </Content>

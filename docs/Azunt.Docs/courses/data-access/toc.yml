@@ -1,0 +1,20 @@
+- name: Overview
+  href: index.md
+
+- name: Entity Framework Core
+  href: ef-core/index.md
+  items:
+    - name: DbContext
+      href: ef-core/dbcontext.md
+    - name: Querying
+      href: ef-core/querying.md
+
+- name: SQL
+  items:
+    - name: Connections
+      href: sql/connections.md
+
+- name: Patterns
+  items:
+    - name: Repository boundaries
+      href: patterns/repositories.md

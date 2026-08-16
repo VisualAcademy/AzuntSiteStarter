@@ -18,4 +18,5 @@
   <symbol id="dashboard" viewBox="0 0 20 20"><path d="M3 3.5h6v5H3zm8 0h6v8h-6zM3 10.5h6v6H3zm8 3h6v3h-6z" fill="none" stroke="currentColor" stroke-width="1.2"/></symbol>
   <symbol id="products" viewBox="0 0 20 20"><path d="M3.5 5.2 10 2l6.5 3.2L10 8.5zM3.5 5.2v7.6L10 18v-9.5m6.5-3.3v7.6L10 18" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/></symbol>
   <symbol id="pricing" viewBox="0 0 20 20"><path d="M3.5 4h13v12h-13zM3.5 7.5h13" fill="none" stroke="currentColor" stroke-width="1.25"/><path d="M10.2 9.3c-1.8 0-2.7.7-2.7 1.7s.8 1.5 2.5 1.7 2.5.7 2.5 1.7-.9 1.7-2.7 1.7m.2-7.8v8.6" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round"/></symbol>
+  <symbol id="courses" viewBox="0 0 20 20"><path d="M3.5 4.2c2.4-.7 4.5-.3 6.5 1.1v11c-2-1.4-4.1-1.8-6.5-1.1zm13 0c-2.4-.7-4.5-.3-6.5 1.1v11c2-1.4 4.1-1.8 6.5-1.1z" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linejoin="round"/><path d="M10 5.3v11" fill="none" stroke="currentColor" stroke-width="1.1"/></symbol>
 </svg>

@@ -1,0 +1,20 @@
+- name: Overview
+  href: index.md
+
+- name: Components
+  href: components/index.md
+  items:
+    - name: Component basics
+      href: components/component-basics.md
+    - name: Forms
+      href: components/forms.md
+
+- name: State
+  items:
+    - name: State management
+      href: state/state-management.md
+
+- name: Interop
+  items:
+    - name: JavaScript interop
+      href: interop/javascript.md

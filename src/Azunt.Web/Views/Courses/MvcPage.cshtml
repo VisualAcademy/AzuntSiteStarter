@@ -1,0 +1,16 @@
+@{
+    Layout = "_PublicLayout";
+    ViewData["Title"] = "MVC course page";
+}
+
+<section class="simple-page shell-width">
+  <span class="eyebrow">Courses / MVC</span>
+  <h1>Explicit MVC course page</h1>
+  <p class="lead">
+    This page is handled directly by an MVC action. The Markdown course route remains the fallback for other <code>/courses/...</code> URLs.
+  </p>
+  <p>
+    Add a literal route such as <code>[HttpGet("reports")]</code> to <code>CoursesController</code> when a course URL needs controller logic, a form, or dynamic data.
+  </p>
+  <p><a class="button button-outline" href="/courses">Back to courses</a></p>
+</section>

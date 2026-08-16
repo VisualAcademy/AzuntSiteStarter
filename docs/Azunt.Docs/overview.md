@@ -13,6 +13,11 @@ Azunt.Docs/
 ├─ guides/
 ├─ code/
 ├─ protected/
+├─ courses/
+│  ├─ toc.yml
+│  ├─ aspnet-core/
+│  ├─ blazor/
+│  └─ data-access/
 ├─ templates/
 └─ docfx.json
 ```
@@ -47,6 +52,12 @@ To add a public page:
 1. Add the Markdown file at the desired path.
 2. Add it to `navigation/toc.yml`.
 3. Rebuild the solution.
+
+## Courses in the public layout
+
+Files under `courses/` are excluded from DocFX and rendered by MVC under `/courses`. Each course folder has its own `toc.yml`, so the left navigation stays within the current course. The public header and footer remain visible around the three-column course content.
+
+See [Courses in the public layout](/docs/guides/courses-public-layout) for the implementation details.
 
 ## Protected documentation
 

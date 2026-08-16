@@ -14,6 +14,7 @@ function attachShellLinks() {
   links.setAttribute('aria-label', 'Azunt site navigation')
   links.innerHTML = `
     <a href="/">Public</a>
+    <a href="/courses">Courses</a>
     <a class="active" href="/docs/">Docs</a>
     <a href="/dashboard">Dashboard</a>
     <a href="/account/profile">Account</a>`

@@ -9,6 +9,7 @@
         ],
         "exclude": [
           "protected/**",
+          "courses/**",
           "templates/**",
           "_site/**"
         ]

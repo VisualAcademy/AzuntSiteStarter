@@ -1,8 +1,10 @@
 # AzuntSiteStarter
 
-ASP.NET Core 10 reference solution with four site areas under one host:
+ASP.NET Core 10 reference solution with public pages, Markdown content, DocFX documentation, dashboard, and account areas under one host.
 
 - `/` — public pages
+- `/courses/` — folder-based Markdown rendered inside the public layout
+- `/resources/` — selected DocFX Markdown files mapped explicitly to MVC pages
 - `/docs/` — DocFX 2.78.5 public documentation
 - `/docs/private/` — authenticated Markdown documentation rendered by MVC
 - `/dashboard/` — authenticated dashboard
@@ -29,14 +31,12 @@ Convenience commands:
 - `Run.cmd` — run the HTTPS launch profile
 - `Publish.cmd` — publish Release output to `artifacts/publish`
 
-The web project runs DocFX 2.78.5 through `dotnet tool exec`. There is no `dotnet tool restore` target inside the Visual Studio build.
-
 ## Test account
 
 - Email: `demo@azunt.local`
 - Password: `Azunt123!`
 
-Authentication uses ASP.NET Core Identity with EF Core InMemory. The data is cleared when the application process restarts. Use SQL Server or Azure SQL for persistent identity storage.
+Authentication uses ASP.NET Core Identity with EF Core InMemory. The data is cleared when the application process restarts.
 
 ## Solution layout
 
@@ -50,12 +50,14 @@ AzuntSiteStarter/
 │     ├─ index.md
 │     ├─ overview.md
 │     ├─ toc.yml
-│     ├─ navigation/
-│     │  └─ toc.yml
+│     ├─ navigation/toc.yml
 │     ├─ getting-started/
 │     ├─ guides/
 │     ├─ code/
 │     ├─ protected/
+│     ├─ courses/
+│     ├─ mappings/
+│     │  └─ resources.yml
 │     ├─ templates/azunt/
 │     └─ docfx.json
 ├─ Directory.Build.props
@@ -63,11 +65,69 @@ AzuntSiteStarter/
 └─ global.json
 ```
 
-Markdown starts directly at the `Azunt.Docs` root. There is no nested `articles`, `guide`, or `docs` content folder.
+Markdown starts directly at the `Azunt.Docs` root.
+
+## MarkdownContentService
+
+MVC Markdown rendering is handled by one service:
+
+```text
+MarkdownContentService
+├─ Courses
+├─ Protected docs
+└─ Explicit MVC mappings
+```
+
+The service handles Markdown rendering, heading extraction, breadcrumbs, YAML navigation, nearest-folder TOC lookup, explicit TOC selection, and safe path resolution.
+
+### Folder mapping
+
+`/courses/**` maps a complete Markdown folder tree to one MVC URL space.
+
+```text
+courses/aspnet-core/fundamentals/routing.md
+→ /courses/aspnet-core/fundamentals/routing
+```
+
+The nearest `toc.yml` is selected automatically.
+
+### Explicit MVC mapping
+
+A controller can map one existing public documentation file to another MVC URL.
+
+```csharp
+[HttpGet("authentication")]
+public Task<IActionResult> Authentication() => RenderMarkdownPageAsync(
+    "guides/authentication.md",
+    "/resources/authentication",
+    "/docs/guides/authentication");
+```
+
+This produces both URLs from one Markdown source:
+
+```text
+/docs/guides/authentication      DocFX layout
+/resources/authentication       Public MVC layout
+```
+
+The MVC page uses `mappings/resources.yml` for its local left navigation. The canonical URL points to the DocFX page in the sample.
+
+Additional examples:
+
+```text
+/resources/routing
+/resources/site-structure
+```
+
+The implementation is documented at:
+
+```text
+/docs/guides/mvc-markdown-mapping
+```
 
 ## Public documentation
 
-Source paths map directly to public URLs:
+Source paths map directly to public DocFX URLs:
 
 ```text
 index.md                              /docs/
@@ -77,36 +137,52 @@ guides/authentication.md              /docs/guides/authentication
 code/razor.md                         /docs/code/razor
 ```
 
-DocFX writes HTML files internally. ASP.NET Core exposes extensionless `/docs/...` URLs.
-
-### Left TreeView
-
-DocFX uses two TOC files:
+DocFX uses:
 
 ```text
 toc.yml                 top navigation
 navigation/toc.yml      left TreeView
 ```
 
-Add a Markdown file at the desired URL path, then add it to `navigation/toc.yml`.
+## Courses in the public layout
+
+Markdown under `docs/Azunt.Docs/courses` is rendered inside `_PublicLayout.cshtml`. The public header and footer are retained, while the documentation body stays inside the same `shell-width` container used by landing pages.
+
+```text
+Public header
+────────────────────────────────────────
+Local TOC | Article | On this page
+────────────────────────────────────────
+Public footer
+```
+
+A literal controller route can coexist with the Markdown catch-all. `/courses/mvc-page` is included as a route-priority example.
 
 ## Protected documentation
 
-Markdown under `docs/Azunt.Docs/protected` is excluded from the public DocFX build. The web project copies it to the application output and serves it through `DocsController` after authorization.
+Markdown under `docs/Azunt.Docs/protected` is excluded from DocFX and copied to `ProtectedDocs` in the web output. `DocsController` runs authorization before calling `MarkdownContentService`.
 
 ```text
-docs/Azunt.Docs/protected/*.md
-        ↓
-ProtectedDocs/*.md
-        ↓
-DocsController + [Authorize]
-        ↓
-Markdig
-        ↓
+protected/*.md
+   ↓
+[Authorize]
+   ↓
+MarkdownContentService
+   ↓
 /docs/private/*
 ```
 
-Public and protected docs use the same visual structure: left navigation, centered article content, and an `On this page` rail when headings are available. Public pages use the DocFX modern template; protected pages use `_DocsLayout.cshtml`.
+## Runtime Markdown copies
+
+The web project keeps Markdown source outside `wwwroot` for MVC rendering:
+
+```text
+CourseDocs/       courses/**
+ProtectedDocs/    protected/**
+MarkdownDocs/     public DocFX Markdown used by explicit mappings
+```
+
+These folders are generated in the build/publish output from the source under `docs/Azunt.Docs`.
 
 ## Visual Studio documentation workflow
 
@@ -122,9 +198,7 @@ DocFX rebuilds
 Refresh browser
 ```
 
-`Azunt.Web.csproj` registers the DocFX source tree with Visual Studio's fast up-to-date check. Documentation changes therefore trigger the DocFX build even though the files are outside `src/Azunt.Web`.
-
-The full workflow and the `Microsoft.WebTools.ProjectSystem.WebServer.SelfHostWebServer` recovery steps are documented at:
+The detailed workflow is at:
 
 ```text
 /docs/getting-started/development-workflow
@@ -144,74 +218,25 @@ Publish output:
 wwwroot/docs/**
 ```
 
-The deployed application does not require DocFX at runtime.
-
-To skip the DocFX build temporarily:
+To skip DocFX temporarily:
 
 ```powershell
 dotnet build .\src\Azunt.Web\Azunt.Web.csproj -p:BuildDocsOnBuild=false
 ```
 
-## Razor and CSHTML highlighting
+## Dashboard
 
-The DocFX template extension is under:
+The dashboard supports nested navigation, a sliding sidebar, compact icon rail, flyout tree menus, and the waffle app launcher.
 
-```text
-docs/Azunt.Docs/templates/azunt
-```
-
-`public/main.js` registers the Razor grammar from `razor.js` for both `razor` and `cshtml` fenced code blocks.
-
-Test page:
-
-```text
-/docs/code/razor
-```
-
-## Dashboard navigation
-
-The dashboard sidebar supports nested menu levels.
-
-```text
-Overview
-Resources
-  App services
-  Databases
-  Storage
-Management
-  Identity
-    Users
-    Roles
-  Tenants
-Monitoring
-  Activity log
-  Service health
-Documentation
-Protected docs
-Account
-```
-
-Navigation data is defined in `DashboardNavigationViewComponent.cs`. `_DashboardNavNode.cshtml` renders the tree recursively.
-
-The two sidebar controls have separate behavior:
-
-- Top hamburger — slides the entire sidebar out or back in.
-- Bottom arrow — switches between the full sidebar and the compact icon rail.
-
-In compact mode, parent icons open a dark flyout tree. Flyout list markers are removed; hierarchy is shown with icons, indentation, and chevrons.
-
-## App launcher
-
-The waffle button in the dashboard header opens an app launcher with links to the public site, dashboard, resources, documentation, protected documentation, account, products, and pricing. It also includes quick links for common destinations.
-
-The launcher is implemented in `_DashboardLayout.cshtml`, `dashboard.css`, and `dashboard.js`. Its tile icons use the local `dashboard-icons.svg` sprite.
+- Top hamburger — hides or restores the whole sidebar
+- Bottom arrow — switches between full sidebar and icon rail
+- Compact parent icon — opens the submenu flyout
 
 ## Main extension points
 
-The current solution keeps one executable web project. If the codebase grows, common extraction points are:
-
-- `Azunt.UI` — reusable layouts and components
-- `Azunt.Application` — application services and use cases
-- `Azunt.Domain` — domain models and rules
-- `Azunt.Infrastructure` — SQL Server, Azure, and external integrations
-- authorization policies for product-, tenant-, role-, or license-specific documentation
+- `MarkdownContentService` — shared Markdown renderer for folder, protected, and explicit MVC mappings
+- `DashboardNavigationViewComponent` — dashboard navigation data
+- `Azunt.UI` — future reusable layouts/components
+- `Azunt.Application` — future application services/use cases
+- `Azunt.Domain` — future domain models/rules
+- `Azunt.Infrastructure` — future SQL Server, Azure, and external integrations

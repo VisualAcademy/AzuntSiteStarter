@@ -4,8 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>@ViewData["Title"] - Azunt</title>
+  @if (ViewData["CanonicalUrl"] is string canonicalUrl && !string.IsNullOrWhiteSpace(canonicalUrl))
+  {
+    var canonicalHref = canonicalUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+      ? canonicalUrl
+      : $"{Context.Request.Scheme}://{Context.Request.Host}{canonicalUrl}";
+    <link rel="canonical" href="@canonicalHref" />
+  }
   <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/css/public.css" asp-append-version="true" />
+  @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="public-body">
   <partial name="_PublicHeader" />

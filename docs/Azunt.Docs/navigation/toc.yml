@@ -27,6 +27,10 @@
       href: ../guides/dashboard-tree-navigation.md
     - name: Dashboard app launcher
       href: ../guides/app-launcher.md
+    - name: Courses in the public layout
+      href: ../guides/courses-public-layout.md
+    - name: MVC Markdown mapping
+      href: ../guides/mvc-markdown-mapping.md
 
 - name: Code samples
   expanded: true

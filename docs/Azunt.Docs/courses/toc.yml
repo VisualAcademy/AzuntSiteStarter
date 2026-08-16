@@ -1,0 +1,14 @@
+- name: Courses home
+  href: index.md
+
+- name: ASP.NET Core
+  href: aspnet-core/index.md
+
+- name: Blazor
+  href: blazor/index.md
+
+- name: Data access
+  href: data-access/index.md
+
+- name: MVC page example
+  href: /courses/mvc-page

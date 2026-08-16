@@ -1,6 +1,6 @@
-@using Azunt.Web.Models.Docs
+@using Azunt.Web.Models.Markdown
 @{
-    var docsModel = Model as DocsPageViewModel;
+    var docsModel = Model as MarkdownPageViewModel;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +18,8 @@
     <div class="docs-search" aria-hidden="true"><span>⌕</span><span>Search documentation</span></div>
     <nav aria-label="Site navigation">
       <a href="/">Public</a>
+      <a href="/courses">Courses</a>
+      <a href="/resources">Resources</a>
       <a href="/dashboard">Dashboard</a>
       <a href="/account/profile">Account</a>
     </nav>
@@ -44,6 +46,9 @@
           <a href="/docs/guides/authentication">Authentication</a>
           <a href="/docs/guides/protected-docs">Protected documentation</a>
           <a href="/docs/guides/dashboard-tree-navigation">Dashboard navigation</a>
+          <a href="/docs/guides/app-launcher">Dashboard app launcher</a>
+          <a href="/docs/guides/courses-public-layout">Courses in public layout</a>
+          <a href="/docs/guides/mvc-markdown-mapping">MVC Markdown mapping</a>
         </div>
       </details>
 
