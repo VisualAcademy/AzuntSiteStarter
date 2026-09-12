@@ -1,7 +1,2 @@
-document.addEventListener('click', event => {
-  const trigger = event.target.closest('.nav-button');
-  if (!trigger) return;
-  const menu = trigger.parentElement?.querySelector('.mega-menu');
-  if (!menu) return;
-  menu.style.display = menu.style.display === 'grid' ? '' : 'grid';
-});
+// General public-page JavaScript belongs in this file.
+// Public navigation behavior is intentionally isolated in public-menu.js.
