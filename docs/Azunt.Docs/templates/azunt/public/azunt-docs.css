@@ -1,0 +1,66 @@
+/* Azunt customization for DocFX modern template.
+   The documentation tree itself is DocFX's native local TOC, generated from
+   navigation/toc.yml. Keep navigation semantic and let DocFX own the tree. */
+
+:root {
+  --azunt-accent: #0078d4;
+  --azunt-border: #e5e7eb;
+  --azunt-muted: #5f6b7a;
+}
+
+.azunt-shell-links {
+  display: flex;
+  align-items: center;
+  gap: .15rem;
+  margin-inline-start: auto;
+  padding-inline-start: 1rem;
+}
+
+.azunt-shell-links a {
+  color: inherit;
+  text-decoration: none;
+  padding: .45rem .65rem;
+  border-radius: .25rem;
+  font-size: .9rem;
+  white-space: nowrap;
+}
+
+.azunt-shell-links a:hover,
+.azunt-shell-links a.active {
+  color: var(--azunt-accent);
+  background: color-mix(in srgb, var(--azunt-accent) 8%, transparent);
+}
+
+/* Native DocFX TOC refinements. These selectors refine the
+   generated TOC instead of replacing it with JavaScript. */
+.toc-offcanvas,
+.toc { 
+  border-color: var(--azunt-border);
+}
+
+.toc a.active,
+.toc .active > a,
+.toc-offcanvas a.active,
+.toc-offcanvas .active > a {
+  color: var(--azunt-accent);
+  font-weight: 600;
+}
+
+.toc a,
+.toc-offcanvas a {
+  text-decoration: none;
+}
+
+article h1 {
+  letter-spacing: -.025em;
+}
+
+pre code.hljs {
+  border-radius: .35rem;
+}
+
+@media (max-width: 991.98px) {
+  .azunt-shell-links {
+    display: none;
+  }
+}

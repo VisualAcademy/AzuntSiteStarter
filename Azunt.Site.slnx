@@ -18,7 +18,8 @@
     <File Path="docs/Azunt.Docs/protected/overview.md" />
     <File Path="docs/Azunt.Docs/templates/azunt/public/main.css" />
     <File Path="docs/Azunt.Docs/templates/azunt/public/main.js" />
-    <File Path="docs/Azunt.Docs/templates/azunt/public/razor.js" />
+    <File Path="docs/Azunt.Docs/templates/azunt/public/azunt-docs.css" />
+    <File Path="docs/Azunt.Docs/templates/azunt/public/azunt-docs.js" />
   </Folder>
   <Folder Name="/Solution Items/">
     <File Path="README.md" />

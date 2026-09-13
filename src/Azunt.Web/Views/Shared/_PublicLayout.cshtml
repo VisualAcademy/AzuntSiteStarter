@@ -11,8 +11,8 @@
       : $"{Context.Request.Scheme}://{Context.Request.Host}{canonicalUrl}";
     <link rel="canonical" href="@canonicalHref" />
   }
-  <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-  <link rel="stylesheet" href="~/css/public.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/azunt-core.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/azunt-landing.css" asp-append-version="true" />
   @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="public-body">
@@ -21,8 +21,7 @@
     @RenderBody()
   </main>
   <partial name="_PublicFooter" />
-  <script src="~/js/site.js" asp-append-version="true"></script>
-  <script src="~/js/public-menu.js" asp-append-version="true"></script>
+  <script src="~/js/azunt-landing.js" asp-append-version="true"></script>
   @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
