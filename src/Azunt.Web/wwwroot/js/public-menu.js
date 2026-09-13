@@ -9,6 +9,8 @@
   const scrim = header.querySelector('[data-az-menu-scrim]');
   const menuItems = Array.from(header.querySelectorAll('[data-az-menu-item]'));
   const menuTriggers = Array.from(header.querySelectorAll('[data-az-menu-trigger]'));
+  const actionMenus = Array.from(header.querySelectorAll('[data-az-action-menu]'));
+  const actionTriggers = Array.from(header.querySelectorAll('[data-az-action-trigger]'));
   const desktopMedia = window.matchMedia('(min-width: 961px)');
 
   const isDesktop = () => desktopMedia.matches;
@@ -18,9 +20,89 @@
     return id ? document.getElementById(id) : null;
   };
 
+  const viewportGutter = 8;
+
+  // Keep the compact first-level dropdown inside the browser viewport.
+  // It opens to the right by default; only edge-align it when that would
+  // otherwise create horizontal overflow.
+  const fitStandardDropdownToViewport = panel => {
+    if (!panel?.classList.contains('az-dropdown') || !isDesktop()) return;
+
+    panel.classList.remove('is-edge-aligned');
+    panel.style.removeProperty('transform');
+    panel.style.maxWidth = `calc(100vw - ${viewportGutter * 2}px)`;
+
+    let rect = panel.getBoundingClientRect();
+    if (rect.right > window.innerWidth - viewportGutter) {
+      panel.classList.add('is-edge-aligned');
+      rect = panel.getBoundingClientRect();
+    }
+
+    // Defensive clamp for unusually narrow desktop windows or zoom levels.
+    if (rect.left < viewportGutter) {
+      panel.style.transform = `translateX(${viewportGutter - rect.left}px)`;
+    } else if (rect.right > window.innerWidth - viewportGutter) {
+      panel.style.transform = `translateX(${window.innerWidth - viewportGutter - rect.right}px)`;
+    }
+  };
+
+  // Nested dropdowns prefer the familiar right-facing flyout. If the
+  // submenu would cross the right edge, flip it to the left. A final clamp
+  // prevents any horizontal page scrollbar even at unusual zoom/viewport sizes.
+  const fitFlyoutToViewport = details => {
+    if (!details || !isDesktop()) return;
+
+    details.classList.remove('is-flyout-left');
+    const submenu = details.querySelector('.az-dropdown-submenu');
+    if (!submenu) return;
+
+    submenu.style.removeProperty('transform');
+    submenu.style.maxWidth = `calc(100vw - ${viewportGutter * 2}px)`;
+
+    let rect = submenu.getBoundingClientRect();
+    if (rect.right > window.innerWidth - viewportGutter) {
+      details.classList.add('is-flyout-left');
+      rect = submenu.getBoundingClientRect();
+    }
+
+    if (rect.left < viewportGutter) {
+      submenu.style.transform = `translateX(${viewportGutter - rect.left}px)`;
+      rect = submenu.getBoundingClientRect();
+    }
+
+    if (rect.right > window.innerWidth - viewportGutter) {
+      const current = submenu.style.transform || '';
+      const delta = window.innerWidth - viewportGutter - rect.right;
+      submenu.style.transform = `${current} translateX(${delta}px)`.trim();
+    }
+  };
+
   const resetNestedTabs = item => {
     item?.querySelectorAll('[data-az-tabs]').forEach(tabs => {
       tabs.classList.remove('is-mobile-tab-open');
+    });
+
+    item?.querySelectorAll('details[data-az-dropdown-nested][open]').forEach(details => {
+      details.open = false;
+    });
+  };
+
+  const closeActionMenu = (menu, restoreFocus = false) => {
+    if (!menu) return;
+
+    const trigger = menu.querySelector('[data-az-action-trigger]');
+    const panel = trigger ? getPanel(trigger) : null;
+
+    menu.classList.remove('is-open');
+    trigger?.setAttribute('aria-expanded', 'false');
+    if (panel) panel.hidden = true;
+
+    if (restoreFocus) trigger?.focus();
+  };
+
+  const closeAllActionMenus = (exceptMenu = null) => {
+    actionMenus.forEach(menu => {
+      if (menu !== exceptMenu) closeActionMenu(menu);
     });
   };
 
@@ -39,9 +121,10 @@
   };
 
   const syncHeaderState = () => {
-    const anyOpen = menuItems.some(item => item.classList.contains('is-open'));
-    header.classList.toggle('has-open-menu', anyOpen && isDesktop());
-    primaryNav?.classList.toggle('is-submenu-open', anyOpen && !isDesktop());
+    const openItems = menuItems.filter(item => item.classList.contains('is-open'));
+    const hasOpenMegaMenu = openItems.some(item => item.querySelector('.az-mega:not([hidden])'));
+    header.classList.toggle('has-open-menu', hasOpenMegaMenu && isDesktop());
+    primaryNav?.classList.toggle('is-submenu-open', openItems.length > 0 && !isDesktop());
   };
 
   const closeAllMenus = (exceptItem = null) => {
@@ -56,10 +139,12 @@
     const panel = trigger ? getPanel(trigger) : null;
     if (!trigger || !panel) return;
 
+    closeAllActionMenus();
     closeAllMenus(item);
     item.classList.add('is-open');
     trigger.setAttribute('aria-expanded', 'true');
     panel.hidden = false;
+    fitStandardDropdownToViewport(panel);
     resetNestedTabs(item);
     syncHeaderState();
 
@@ -97,6 +182,7 @@
   const setMobileNav = (open, restoreFocus = false) => {
     if (!primaryNav || !navToggle) return;
 
+    if (open) closeAllActionMenus();
     primaryNav.classList.toggle('is-open', open);
     navToggle.setAttribute('aria-expanded', String(open));
     navToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
@@ -120,15 +206,67 @@
     setMobileNav(!primaryNav?.classList.contains('is-open'));
   });
 
+  actionTriggers.forEach(trigger => {
+    trigger.addEventListener('click', event => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const menu = trigger.closest('[data-az-action-menu]');
+      const panel = getPanel(trigger);
+      if (!menu || !panel) return;
+
+      const opening = !menu.classList.contains('is-open');
+      closeAllActionMenus(menu);
+
+      if (!opening) {
+        closeActionMenu(menu);
+        return;
+      }
+
+      if (!isDesktop() && primaryNav?.classList.contains('is-open')) {
+        setMobileNav(false);
+      }
+      closeAllMenus();
+
+      menu.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+      panel.hidden = false;
+    });
+  });
+
+  header.querySelectorAll('details[data-az-dropdown-nested]').forEach(details => {
+    details.addEventListener('toggle', () => {
+      details.classList.remove('is-flyout-left');
+      if (!details.open) return;
+
+      const owner = details.closest('.az-dropdown-list');
+      owner?.querySelectorAll('details[data-az-dropdown-nested][open]').forEach(other => {
+        if (other !== details) other.open = false;
+      });
+
+      window.requestAnimationFrame(() => fitFlyoutToViewport(details));
+    });
+  });
+
   scrim?.addEventListener('click', () => closeAllMenus());
 
   document.addEventListener('click', event => {
+    if (!actionMenus.some(menu => menu.contains(event.target))) {
+      closeAllActionMenus();
+    }
+
     if (!isDesktop()) return;
     if (!header.contains(event.target)) closeAllMenus();
   });
 
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
+
+    const openActionMenu = actionMenus.find(menu => menu.classList.contains('is-open'));
+    if (openActionMenu) {
+      closeActionMenu(openActionMenu, true);
+      return;
+    }
 
     const openItem = menuItems.find(item => item.classList.contains('is-open'));
     if (openItem) {
@@ -236,6 +374,7 @@
 
   const syncViewportMode = () => {
     closeAllMenus();
+    closeAllActionMenus();
     document.documentElement.classList.remove('az-mobile-nav-open');
     document.body.classList.remove('az-nav-open');
 
@@ -259,6 +398,21 @@
   } else {
     desktopMedia.addListener(syncViewportMode);
   }
+
+  let resizeFrame = 0;
+  window.addEventListener('resize', () => {
+    if (!isDesktop()) return;
+    window.cancelAnimationFrame(resizeFrame);
+    resizeFrame = window.requestAnimationFrame(() => {
+      const openItem = menuItems.find(item => item.classList.contains('is-open'));
+      const openPanel = openItem?.querySelector('.az-dropdown:not([hidden])');
+      if (openPanel) fitStandardDropdownToViewport(openPanel);
+
+      openItem?.querySelectorAll('details[data-az-dropdown-nested][open]').forEach(details => {
+        fitFlyoutToViewport(details);
+      });
+    });
+  });
 
   syncViewportMode();
 })();

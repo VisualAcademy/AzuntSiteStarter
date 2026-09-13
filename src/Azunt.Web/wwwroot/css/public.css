@@ -152,12 +152,103 @@
 .az-company-links strong { color: #242424; font-size: 13.5px; }
 .az-company-links svg { position: absolute; right: 14px; top: 15px; color: #0067b8; }
 
+
+/* Standard dropdown example. Kept intentionally separate from the wide mega-menu panels. */
+.az-nav-item--dropdown { position: relative; }
+.az-dropdown {
+  position: absolute;
+  z-index: 7;
+  top: 100%;
+  left: 0;
+  right: auto;
+  width: 264px;
+  color: #242424;
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  border-top: 0;
+  box-shadow: 0 10px 24px rgba(0,0,0,.16);
+}
+.az-dropdown[hidden], .az-action-dropdown[hidden] { display: none !important; }
+.az-dropdown-list, .az-dropdown-submenu { margin: 0; padding: 7px 0; list-style: none; }
+.az-dropdown-list > li { position: relative; }
+.az-dropdown-link,
+.az-dropdown-submenu a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  width: 100%;
+  min-height: 52px;
+  padding: 9px 14px;
+  color: #242424;
+  background: #fff;
+  border: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.az-dropdown-link:hover,
+.az-dropdown-link:focus-visible,
+.az-dropdown-submenu a:hover,
+.az-dropdown-submenu a:focus-visible,
+.az-dropdown-nested details[open] > .az-dropdown-summary {
+  color: #111;
+  background: #f2f2f2;
+  outline: none;
+}
+.az-dropdown-link > span:first-child,
+.az-dropdown-submenu a { min-width: 0; }
+.az-dropdown-link strong, .az-dropdown-submenu strong { display: block; color: inherit; font-size: 13px; font-weight: 650; }
+.az-dropdown-link small, .az-dropdown-submenu small { display: block; margin-top: 2px; color: #666; font-size: 11.5px; line-height: 1.35; }
+.az-dropdown-summary { list-style: none; }
+.az-dropdown-summary::-webkit-details-marker { display: none; }
+.az-dropdown-arrow { flex: 0 0 auto; width: 13px; height: 13px; color: #666; fill: none; stroke: currentColor; stroke-width: 2; transition: transform .14s ease; transform: rotate(-90deg); }
+.az-dropdown-nested details[open] > .az-dropdown-summary .az-dropdown-arrow { transform: rotate(-90deg); }
+.az-dropdown-submenu {
+  position: absolute;
+  z-index: 9;
+  top: -7px;
+  left: calc(100% - 1px);
+  right: auto;
+  width: 248px;
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  box-shadow: 0 10px 24px rgba(0,0,0,.15);
+}
+.az-dropdown-submenu a { min-height: 49px; display: block; }
+.az-dropdown-nested details.is-flyout-left .az-dropdown-submenu { left: auto; right: calc(100% - 1px); }
+.az-dropdown.is-edge-aligned { left: auto; right: 0; }
+
+/* Compact account dropdown in the header action area. */
+.az-signin-menu { position: relative; }
+.az-signin-trigger { gap: 4px; }
+.az-signin-chevron { width: 11px; height: 11px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform .14s ease; }
+.az-signin-menu.is-open .az-signin-chevron { transform: rotate(180deg); }
+.az-action-dropdown {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 7px);
+  right: 0;
+  width: 252px;
+  padding: 6px 0;
+  color: #242424;
+  background: #fff;
+  border: 1px solid #d5d5d5;
+  box-shadow: 0 10px 24px rgba(0,0,0,.16);
+}
+.az-action-dropdown-title { padding: 8px 13px 6px; color: #666; font-size: 10px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.az-action-dropdown a { display: block; padding: 9px 13px; color: #242424; }
+.az-action-dropdown a:hover, .az-action-dropdown a:focus-visible { color: #111; background: #f2f2f2; outline: none; }
+.az-action-dropdown strong { display: block; font-size: 12.5px; font-weight: 650; }
+.az-action-dropdown small { display: block; margin-top: 2px; color: #666; font-size: 11px; line-height: 1.35; }
+
 @media (max-width: 1120px) and (min-width: 961px) {
-  .az-header-shell { gap: 2px; }
-  .az-top-link { padding-inline: 7px; font-size: 12px; }
+  .az-header-shell { gap: 1px; }
+  .az-header-brand { padding-right: 6px; }
+  .az-top-link { padding-inline: 6px; font-size: 11.5px; }
   .az-header-actions { gap: 0; }
-  .az-header-quiet { padding-inline: 7px; }
-  .az-header-cta { padding-inline: 9px; }
+  .az-icon-action { width: 34px; }
+  .az-header-quiet { padding-inline: 6px; font-size: 12px; }
+  .az-header-cta { padding-inline: 8px; font-size: 12px; }
 }
 
 @media (max-width: 960px) {
@@ -257,6 +348,31 @@
   .az-resource-columns a { padding: 9px 4px; }
   .az-company-links { grid-template-columns: 1fr; gap: 0; border: 0; background: #fff; }
   .az-company-links a { min-height: 65px; border-bottom: 1px solid #ddd; }
+
+  .az-dropdown { position: static; width: auto; border: 0; box-shadow: none; background: #fff; }
+  .az-dropdown-list { padding: 0; }
+  .az-dropdown-list > li { border-bottom: 1px solid #d7d7d7; }
+  .az-dropdown-link { min-height: 60px; padding: 10px 20px; }
+  .az-dropdown-link strong { font-size: 14px; font-weight: 550; }
+  .az-dropdown-link small { display: none; }
+  .az-dropdown-arrow { transform: rotate(0deg); }
+  .az-dropdown-nested details[open] > .az-dropdown-summary .az-dropdown-arrow { transform: rotate(180deg); }
+  .az-dropdown-submenu {
+    position: static;
+    width: auto;
+    padding: 0;
+    border: 0;
+    border-top: 1px solid #ddd;
+    box-shadow: none;
+    background: #f4f4f4;
+  }
+  .az-dropdown-submenu li + li { border-top: 1px solid #ddd; }
+  .az-dropdown-submenu a { min-height: 54px; padding: 10px 20px 10px 38px; background: #f4f4f4; }
+  .az-dropdown-submenu a:hover { background: #eaeaea; }
+  .az-dropdown-submenu strong { font-size: 13.5px; font-weight: 500; }
+  .az-dropdown-submenu small { display: none; }
+
+  .az-action-dropdown { top: calc(100% + 5px); right: 0; width: min(260px, calc(100vw - 20px)); }
   .az-menu-scrim { display: none; }
   .az-header-actions .az-icon-action { display: inline-grid; }
   .az-signout-form { display: none; }

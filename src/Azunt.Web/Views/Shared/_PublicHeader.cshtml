@@ -272,6 +272,57 @@
             </div>
           </section>
         </li>
+
+        <li class="az-nav-item az-nav-item--dropdown" data-az-menu-item>
+          <button class="az-top-link az-top-button" type="button" aria-expanded="false" aria-controls="az-menu-more" data-az-menu-trigger>
+            More <svg class="az-chevron"><use href="#az-i-chevron"></use></svg>
+          </button>
+          <section class="az-dropdown" id="az-menu-more" aria-label="More" data-az-menu-panel hidden>
+            <div class="az-mobile-panel-heading">
+              <button type="button" class="az-back-button" data-az-menu-back><svg class="az-icon"><use href="#az-i-back"></use></svg> Back</button>
+              <strong>More</strong>
+            </div>
+            <ul class="az-dropdown-list">
+              <li>
+                <a class="az-dropdown-link" href="/docs/">
+                  <span><strong>Getting started</strong><small>Setup, structure, and implementation guides</small></span>
+                </a>
+              </li>
+              <li class="az-dropdown-nested">
+                <details data-az-dropdown-nested>
+                  <summary class="az-dropdown-link az-dropdown-summary">
+                    <span><strong>Templates</strong><small>Ready-to-adapt site experiences</small></span>
+                    <svg class="az-dropdown-arrow" aria-hidden="true"><use href="#az-i-chevron"></use></svg>
+                  </summary>
+                  <ul class="az-dropdown-submenu">
+                    <li><a href="/"><strong>Landing &amp; marketing</strong><small>Public home and conversion patterns</small></a></li>
+                    <li><a href="/products"><strong>Product pages</strong><small>Product and feature presentation</small></a></li>
+                    <li><a href="/dashboard"><strong>Dashboard</strong><small>Authenticated operations workspace</small></a></li>
+                    <li><a href="/docs/"><strong>Documentation</strong><small>Developer-focused content shell</small></a></li>
+                  </ul>
+                </details>
+              </li>
+              <li class="az-dropdown-nested">
+                <details data-az-dropdown-nested>
+                  <summary class="az-dropdown-link az-dropdown-summary">
+                    <span><strong>Examples</strong><small>Common starter content patterns</small></span>
+                    <svg class="az-dropdown-arrow" aria-hidden="true"><use href="#az-i-chevron"></use></svg>
+                  </summary>
+                  <ul class="az-dropdown-submenu">
+                    <li><a href="/courses"><strong>Courses</strong><small>Structured learning content</small></a></li>
+                    <li><a href="/resources"><strong>Resource center</strong><small>Curated technical resources</small></a></li>
+                    <li><a href="/resources/routing"><strong>Routing guide</strong><small>MVC route examples</small></a></li>
+                  </ul>
+                </details>
+              </li>
+              <li>
+                <a class="az-dropdown-link" href="/pricing">
+                  <span><strong>Plans &amp; pricing</strong><small>Commercial page starter</small></span>
+                </a>
+              </li>
+            </ul>
+          </section>
+        </li>
       </ul>
     </nav>
 
@@ -287,7 +338,17 @@
       }
       else
       {
-        <a class="az-header-quiet" href="/account/login">Sign in</a>
+        <div class="az-signin-menu" data-az-action-menu>
+          <button class="az-header-quiet az-signin-trigger" type="button" aria-expanded="false" aria-controls="az-signin-dropdown" data-az-action-trigger>
+            Sign in <svg class="az-signin-chevron"><use href="#az-i-chevron"></use></svg>
+          </button>
+          <div class="az-action-dropdown" id="az-signin-dropdown" data-az-action-panel hidden>
+            <div class="az-action-dropdown-title">Account</div>
+            <a href="/account/login"><strong>Sign in</strong><small>Access your Azunt account</small></a>
+            <a href="/account/register"><strong>Create account</strong><small>Set up a new account</small></a>
+            <a href="/dashboard"><strong>Open dashboard</strong><small>Go to the authenticated workspace</small></a>
+          </div>
+        </div>
         <a class="az-header-cta" href="/account/register">Start free <svg><use href="#az-i-arrow"></use></svg></a>
       }
     </div>
