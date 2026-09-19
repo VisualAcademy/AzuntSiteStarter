@@ -1,0 +1,62 @@
+@if (Node is not null)
+{
+    var hasChildren = Node.Children.Count > 0;
+    var childrenId = $"dashboard-nav-{Node.Key}-children";
+    var nodeClasses = $"dashboard-nav-node{(Node.IsExpanded ? " is-expanded" : string.Empty)}{(Node.ContainsCurrent ? " is-active-branch" : string.Empty)}";
+    var linkClasses = $"dashboard-nav-link{(Node.IsCurrent ? " is-current" : string.Empty)}";
+
+    <li class="@nodeClasses"
+        data-nav-node
+        data-nav-key="@Node.Key"
+        data-nav-depth="@Node.Depth"
+        data-nav-has-children="@hasChildren.ToString().ToLowerInvariant()"
+        data-active-branch="@Node.ContainsCurrent.ToString().ToLowerInvariant()"
+        style="--nav-depth:@Node.Depth">
+        <div class="dashboard-nav-row">
+            <a class="@linkClasses"
+               data-nav-primary-link
+               href="@Node.Href"
+               aria-current="@(Node.IsCurrent ? "page" : null)"
+               title="@Node.Text">
+                <span class="dashboard-nav-link-inner">
+                    <span class="dashboard-nav-icon" aria-hidden="true">
+                        <svg viewBox="0 0 20 20" focusable="false">
+                            <use href="/images/dashboard-icons.svg#@Node.Icon"></use>
+                        </svg>
+                    </span>
+                    <span class="dashboard-nav-text">@Node.Text</span>
+                </span>
+            </a>
+
+            @if (hasChildren)
+            {
+                <button class="dashboard-nav-toggle"
+                        type="button"
+                        data-nav-toggle
+                        data-nav-key="@Node.Key"
+                        aria-controls="@childrenId"
+                        aria-expanded="@Node.IsExpanded.ToString().ToLowerInvariant()"
+                        aria-label="@($"{(Node.IsExpanded ? "Collapse" : "Expand")} {Node.Text}")">
+                    <svg class="dashboard-nav-chevron" viewBox="0 0 20 20" aria-hidden="true" focusable="false">
+                        <path d="M7.6 4.8 12.8 10l-5.2 5.2" />
+                    </svg>
+                </button>
+            }
+        </div>
+
+        @if (hasChildren)
+        {
+            <ul id="@childrenId" class="dashboard-nav-children@(Node.IsExpanded ? string.Empty : " is-collapsed")">
+                @foreach (var child in Node.Children)
+                {
+                    <DashboardNavNode Node="child" />
+                }
+            </ul>
+        }
+    </li>
+}
+
+@code {
+    [Parameter, EditorRequired]
+    public DashboardNavigationNodeViewModel Node { get; set; } = default!;
+}

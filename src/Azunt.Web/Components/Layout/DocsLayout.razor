@@ -1,0 +1,90 @@
+@inherits AzuntShellLayoutBase
+@inject IJSRuntime JS
+
+<HeadContent>
+    <link rel="stylesheet" href="/css/azunt-docs.css" />
+</HeadContent>
+
+<div class="docs-body" style="min-height:100vh" data-az-shell="docs" data-az-shell-mode="@ShellModeName">
+    <header class="docs-topbar">
+        <a class="brand" href="/"><span class="brand-mark">A</span><span>Azunt</span></a>
+        <a class="docs-name" href="/docs/">Docs</a>
+        <div class="docs-search" aria-hidden="true"><span>⌕</span><span>Search documentation</span></div>
+        <nav aria-label="Site navigation">
+            <a href="/">Public</a>
+            <a href="/courses">Courses</a>
+            <a href="/resources">Resources</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/account/profile">Account</a>
+        </nav>
+    </header>
+
+    <div class="docs-frame">
+        <aside class="docs-sidebar" aria-label="Documentation navigation">
+            <a class="docs-tree-root" href="/docs/">Documentation</a>
+            <a class="docs-tree-root" href="/docs/overview">Overview</a>
+
+            <details open>
+                <summary>Getting started</summary>
+                <div class="docs-tree-children">
+                    <a href="/docs/getting-started/site-structure">Site structure</a>
+                    <a href="/docs/getting-started/build-and-publish">Build and publish</a>
+                    <a href="/docs/getting-started/development-workflow">Visual Studio workflow</a>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Guides</summary>
+                <div class="docs-tree-children">
+                    <a href="/docs/guides/mvc-shells">MVC and application shells</a>
+                    <a href="/docs/guides/authentication">Authentication</a>
+                    <a href="/docs/guides/protected-docs">Protected documentation</a>
+                    <a href="/docs/guides/dashboard-tree-navigation">Dashboard navigation</a>
+                    <a href="/docs/guides/app-launcher">Dashboard app launcher</a>
+                    <a href="/docs/guides/courses-public-layout">Courses in public layout</a>
+                    <a href="/docs/guides/mvc-markdown-mapping">MVC Markdown mapping</a>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Code</summary>
+                <div class="docs-tree-children">
+                    <a href="/docs/code/razor">Razor &amp; CSHTML</a>
+                    <a href="/docs/code/routing">ASP.NET Core routing</a>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Protected</summary>
+                <div class="docs-tree-children">
+                    <a href="/docs/private/">Overview</a>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Blazor samples</summary>
+                <div class="docs-tree-children">
+                    <a href="/samples/blazor/docs">Public</a>
+                    <a href="/samples/blazor/docs/authenticated">Authenticated</a>
+                    <a href="/samples/blazor/docs/private">Private</a>
+                    <a href="/samples/blazor/docs/admin">Admin</a>
+                </div>
+            </details>
+        </aside>
+
+        <main class="docs-content">
+            @Body
+        </main>
+
+        <aside class="docs-affix" aria-label="On this page">
+            <SectionOutlet SectionName="docs-on-this-page" />
+        </aside>
+    </div>
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("Azunt.shells.docs.init");
+    }
+}

@@ -1,0 +1,50 @@
+@implements IDisposable
+@inject NavigationManager Navigation
+
+<nav class="dashboard-nav" aria-label="Dashboard navigation">
+    <ul class="dashboard-nav-root">
+        @{ string? currentGroup = null; }
+        @foreach (var item in Model.Items)
+        {
+            if (!string.Equals(currentGroup, item.Group, StringComparison.Ordinal))
+            {
+                currentGroup = item.Group;
+                if (!string.IsNullOrWhiteSpace(currentGroup))
+                {
+                    <li class="dashboard-nav-section-label" aria-hidden="true">@currentGroup</li>
+                }
+            }
+
+            <DashboardNavNode Node="item" />
+        }
+    </ul>
+</nav>
+
+@code {
+    private DashboardNavigationViewModel Model => DashboardNavigationCatalog.Build(CurrentPath);
+
+    private string CurrentPath
+    {
+        get
+        {
+            var relative = Navigation.ToBaseRelativePath(Navigation.Uri);
+            var path = relative.Split('?', '#')[0];
+            return "/" + path.TrimStart('/');
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        Navigation.LocationChanged += HandleLocationChanged;
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs args)
+    {
+        _ = InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        Navigation.LocationChanged -= HandleLocationChanged;
+    }
+}

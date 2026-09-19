@@ -1,0 +1,21 @@
+@page "/samples/blazor/landing"
+@layout LandingLayout
+@attribute [AzuntShellModeAttribute(AzuntShellMode.Public)]
+
+<PageTitle>Blazor Landing Shell - Azunt</PageTitle>
+
+<section class="shell-width" style="padding: 4rem 0;">
+    <p class="eyebrow">Blazor Interactive Server shell sample</p>
+    <h1>Landing shell</h1>
+    <p>This page uses the same Azunt landing CSS, JavaScript, navigation behavior, and shell contract as MVC.</p>
+    <p>Interactive clicks: <strong>@clickCount</strong></p>
+    <p>
+        <button class="button button-primary" type="button" @onclick="Increment">Verify Blazor interactivity</button>
+        <a class="button button-quiet" href="/samples/blazor/docs">Open Docs shell</a>
+    </p>
+</section>
+
+@code {
+    private int clickCount;
+    private void Increment() => clickCount++;
+}

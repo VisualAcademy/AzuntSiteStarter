@@ -10,8 +10,9 @@
   const init = () => {
       const compactStorageKey = 'azunt.portal.dashboard.sidebar.compact.v2';
       const treeStorageKey = 'azunt.portal.dashboard.tree.classic.v2';
-      const body = document.body;
-      const sidebar = document.getElementById('portalSidebar');
+      const shellRoot = document.querySelector('[data-az-shell="dashboard"]');
+      const body = shellRoot || document.body;
+      const sidebar = shellRoot?.querySelector('#portalSidebar') || document.getElementById('portalSidebar');
       if (!sidebar) return;
 
       if (activeSidebar === sidebar) return;

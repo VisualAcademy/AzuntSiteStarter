@@ -1,0 +1,31 @@
+@page "/samples/blazor/docs"
+@layout DocsLayout
+@attribute [AzuntShellModeAttribute(AzuntShellMode.Public)]
+
+<PageTitle>Blazor Docs Shell - Azunt</PageTitle>
+
+<div class="docs-breadcrumb">
+    <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>Blazor Docs</span>
+</div>
+<article class="markdown-body">
+    <h1>Blazor Docs shell</h1>
+    <p>This page verifies the documentation shell under Interactive Server rendering.</p>
+    <h2 id="shell-state">Shell state</h2>
+    <p>Current mode: <code>public</code></p>
+    <p>Authentication and authorization remain independent from the visual shell mode.</p>
+    <h2 id="interactive-test">Interactive test</h2>
+    <p><button class="button button-primary" type="button" @onclick="Increment">Clicked @clickCount time(s)</button></p>
+</article>
+
+<SectionContent SectionName="docs-on-this-page">
+    <div class="docs-affix-title">On this page</div>
+    <nav>
+        <a href="#shell-state">Shell state</a>
+        <a href="#interactive-test">Interactive test</a>
+    </nav>
+</SectionContent>
+
+@code {
+    private int clickCount;
+    private void Increment() => clickCount++;
+}

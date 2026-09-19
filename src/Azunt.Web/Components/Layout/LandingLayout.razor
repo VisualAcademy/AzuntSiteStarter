@@ -1,0 +1,34 @@
+@inherits AzuntShellLayoutBase
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<HeadContent>
+    <link rel="stylesheet" href="/css/azunt-landing.css" />
+</HeadContent>
+
+<div class="public-body" data-az-shell="landing" data-az-shell-mode="@ShellModeName">
+    <PublicHeader />
+    <main>
+        @Body
+    </main>
+    <PublicFooter />
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("Azunt.shells.landing.init");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("Azunt.shells.landing.dispose");
+        }
+        catch (JSDisconnectedException)
+        {
+            // The circuit is already gone; browser-side cleanup is no longer required.
+        }
+    }
+}

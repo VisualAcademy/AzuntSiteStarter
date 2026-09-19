@@ -1,0 +1,20 @@
+@page "/samples/blazor/dashboard"
+@layout DashboardLayout
+@attribute [Authorize]
+@attribute [AzuntShellModeAttribute(AzuntShellMode.Authenticated)]
+
+<PageTitle>Blazor Dashboard Shell - Azunt</PageTitle>
+
+<div class="dashboard-page-header">
+    <div>
+        <div class="dashboard-breadcrumb">Samples / Blazor Interactive Server</div>
+        <h1>Dashboard shell</h1>
+        <p>This authenticated page verifies the Blazor dashboard shell, sidebar behavior, and app launcher.</p>
+        <p><button class="button button-primary" type="button" @onclick="Increment">Verify interactivity (@clickCount)</button></p>
+    </div>
+</div>
+
+@code {
+    private int clickCount;
+    private void Increment() => clickCount++;
+}

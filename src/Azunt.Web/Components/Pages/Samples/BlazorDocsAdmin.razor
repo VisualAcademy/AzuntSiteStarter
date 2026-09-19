@@ -1,0 +1,15 @@
+@page "/samples/blazor/docs/admin"
+@layout DocsLayout
+@attribute [Authorize(Roles = "Administrator")]
+@attribute [AzuntShellModeAttribute(AzuntShellMode.Admin)]
+
+<PageTitle>Admin Blazor Docs - Azunt</PageTitle>
+
+<div class="docs-breadcrumb">
+    <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>Admin Blazor Docs</span>
+</div>
+<article class="markdown-body">
+    <h1>Admin Blazor Docs shell</h1>
+    <p>This route requires the <code>Administrator</code> role while continuing to use the same Docs layout.</p>
+    <p>Current mode: <code>admin</code></p>
+</article>

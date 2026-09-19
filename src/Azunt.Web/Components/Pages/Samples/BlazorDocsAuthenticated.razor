@@ -1,0 +1,15 @@
+@page "/samples/blazor/docs/authenticated"
+@layout DocsLayout
+@attribute [Authorize]
+@attribute [AzuntShellModeAttribute(AzuntShellMode.Authenticated)]
+
+<PageTitle>Authenticated Blazor Docs - Azunt</PageTitle>
+
+<div class="docs-breadcrumb">
+    <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>Authenticated Blazor Docs</span>
+</div>
+<article class="markdown-body">
+    <h1>Authenticated Blazor Docs shell</h1>
+    <p>This route requires an authenticated user and still uses the single shared Blazor Docs layout.</p>
+    <p>Current mode: <code>authenticated</code></p>
+</article>

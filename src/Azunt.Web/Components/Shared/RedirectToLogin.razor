@@ -1,0 +1,25 @@
+@inject NavigationManager Navigation
+
+<div class="shell-width" style="padding: 4rem 0;">Redirecting...</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public AuthenticationState AuthenticationState { get; set; } = default!;
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (!firstRender)
+        {
+            return;
+        }
+
+        if (AuthenticationState.User.Identity?.IsAuthenticated == true)
+        {
+            Navigation.NavigateTo("/account/access-denied", forceLoad: true);
+            return;
+        }
+
+        var returnUrl = new Uri(Navigation.Uri).PathAndQuery;
+        Navigation.NavigateTo($"/account/login?returnUrl={Uri.EscapeDataString(returnUrl)}", forceLoad: true);
+    }
+}

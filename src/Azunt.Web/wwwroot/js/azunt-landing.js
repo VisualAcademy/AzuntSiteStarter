@@ -9,17 +9,22 @@
   let legacyMediaCleanup = null;
 
   const disposeActiveShell = () => {
+    const shellRoot = activeHeader?.closest('[data-az-shell="landing"]') || document.querySelector('[data-az-shell="landing"]');
+
     activeController?.abort();
     activeController = null;
     legacyMediaCleanup?.();
     legacyMediaCleanup = null;
+    document.documentElement.classList.remove('az-mobile-nav-open');
+    shellRoot?.classList.remove('az-nav-open');
     activeHeader = null;
   };
 
   const init = () => {
       'use strict';
 
-      const header = document.querySelector('[data-az-header]');
+      const shellRoot = document.querySelector('[data-az-shell="landing"]');
+      const header = shellRoot?.querySelector('[data-az-header]') || document.querySelector('[data-az-header]');
       if (!header) {
         disposeActiveShell();
         return;
@@ -215,7 +220,7 @@
         navToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
         primaryNav.setAttribute('aria-hidden', String(!open && !isDesktop()));
         document.documentElement.classList.toggle('az-mobile-nav-open', open);
-        document.body.classList.toggle('az-nav-open', open);
+        (shellRoot || document.body).classList.toggle('az-nav-open', open);
 
         if (!open) {
           closeAllMenus();
@@ -403,7 +408,7 @@
         closeAllMenus();
         closeAllActionMenus();
         document.documentElement.classList.remove('az-mobile-nav-open');
-        document.body.classList.remove('az-nav-open');
+        (shellRoot || document.body).classList.remove('az-nav-open');
 
         if (!primaryNav || !navToggle) return;
 

@@ -255,8 +255,11 @@
   html.az-mobile-nav-open { height: -webkit-fill-available; overflow: hidden; }
   html.az-mobile-nav-open body { min-height: 100vh; min-height: -webkit-fill-available; overflow: hidden; }
   html.az-mobile-nav-open body > main,
-  html.az-mobile-nav-open body > .public-footer { display: none !important; }
-  body.az-nav-open { overflow: hidden; touch-action: none; }
+  html.az-mobile-nav-open body > .public-footer,
+  html.az-mobile-nav-open .public-body > main,
+  html.az-mobile-nav-open .public-body > .public-footer { display: none !important; }
+  body.az-nav-open,
+  .public-body.az-nav-open { overflow: hidden; touch-action: none; }
   .az-site-header { --az-nav-height: 64px; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
   .az-header-shell { gap: 8px; width: 100%; padding-inline: 14px; }
   .az-mobile-toggle { display: inline-grid; place-items: center; flex: 0 0 auto; width: 38px; height: 38px; padding: 0; border: 0; color: #222; background: transparent; cursor: pointer; }

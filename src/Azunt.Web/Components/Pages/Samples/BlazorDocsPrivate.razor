@@ -1,0 +1,15 @@
+@page "/samples/blazor/docs/private"
+@layout DocsLayout
+@attribute [Authorize]
+@attribute [AzuntShellModeAttribute(AzuntShellMode.Private)]
+
+<PageTitle>Private Blazor Docs - Azunt</PageTitle>
+
+<div class="docs-breadcrumb">
+    <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>Private Blazor Docs</span>
+</div>
+<article class="markdown-body">
+    <h1>Private Blazor Docs shell</h1>
+    <p>This authenticated route demonstrates the <code>private</code> visual mode without creating another Docs layout.</p>
+    <p>Current mode: <code>private</code></p>
+</article>

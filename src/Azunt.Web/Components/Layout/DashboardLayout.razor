@@ -1,0 +1,143 @@
+@inherits AzuntShellLayoutBase
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+<HeadContent>
+    <link rel="stylesheet" href="/css/azunt-dashboard.css" />
+</HeadContent>
+
+<div class="dashboard-body" style="min-height:100vh" data-az-shell="dashboard" data-az-shell-mode="@ShellModeName">
+    <header class="portal-topbar">
+        <button id="appLauncherToggle"
+                class="portal-app-launcher"
+                type="button"
+                aria-label="Open Azunt apps"
+                aria-controls="appLauncherMenu"
+                aria-expanded="false"
+                title="Apps">
+            <span class="portal-waffle" aria-hidden="true">
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+                <span></span><span></span><span></span>
+            </span>
+        </button>
+        <a class="portal-brand" href="/dashboard"><span class="brand-mark small">A</span><span>Azunt Portal</span></a>
+        <button id="sidebarToggle" class="portal-hamburger" type="button" aria-label="Hide navigation" title="Hide navigation" aria-expanded="true">
+            <span></span><span></span><span></span>
+        </button>
+        <nav class="portal-shortcuts" aria-label="Portal shortcuts">
+            <a href="/dashboard">⌂ Dashboard</a>
+            <a href="/dashboard/resources">＋ Resources</a>
+            <a href="/docs/">Docs</a>
+        </nav>
+        <div class="portal-actions">
+            <a href="/">Public site</a>
+            <AuthorizeView Context="auth">
+                <Authorized>
+                    <a class="avatar" href="/account/profile">@GetInitial(auth.User.Identity?.Name)</a>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+    </header>
+
+    <section id="appLauncherMenu" class="portal-app-menu" aria-hidden="true" aria-label="Azunt apps">
+        <div class="portal-app-menu-header">
+            <div>
+                <strong>Azunt</strong>
+                <span>Sites and tools</span>
+            </div>
+            <a href="/">Home</a>
+        </div>
+
+        <nav class="portal-app-grid" aria-label="Azunt applications">
+            <a class="portal-app-item" href="/">
+                <span class="portal-app-icon app-icon-home"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#home"></use></svg></span>
+                <span>Public site</span>
+            </a>
+            <a class="portal-app-item" href="/dashboard">
+                <span class="portal-app-icon app-icon-dashboard"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#dashboard"></use></svg></span>
+                <span>Dashboard</span>
+            </a>
+            <a class="portal-app-item" href="/dashboard/resources">
+                <span class="portal-app-icon app-icon-resources"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#resources"></use></svg></span>
+                <span>Resources</span>
+            </a>
+            <a class="portal-app-item" href="/courses">
+                <span class="portal-app-icon app-icon-courses"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#courses"></use></svg></span>
+                <span>Courses</span>
+            </a>
+            <a class="portal-app-item" href="/docs/">
+                <span class="portal-app-icon app-icon-docs"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#docs"></use></svg></span>
+                <span>Documentation</span>
+            </a>
+            <a class="portal-app-item" href="/docs/private/">
+                <span class="portal-app-icon app-icon-protected"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#shield"></use></svg></span>
+                <span>Protected docs</span>
+            </a>
+            <a class="portal-app-item" href="/account/profile">
+                <span class="portal-app-icon app-icon-account"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#account"></use></svg></span>
+                <span>Account</span>
+            </a>
+            <a class="portal-app-item" href="/products">
+                <span class="portal-app-icon app-icon-products"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#products"></use></svg></span>
+                <span>Products</span>
+            </a>
+            <a class="portal-app-item" href="/pricing">
+                <span class="portal-app-icon app-icon-pricing"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#pricing"></use></svg></span>
+                <span>Pricing</span>
+            </a>
+        </nav>
+
+        <div class="portal-app-menu-divider"></div>
+        <div class="portal-app-quick-links">
+            <a href="/dashboard/resources">Browse resources <span aria-hidden="true">→</span></a>
+            <a href="/courses/aspnet-core">Browse courses <span aria-hidden="true">→</span></a>
+            <a href="/docs/getting-started/site-structure">Getting started <span aria-hidden="true">→</span></a>
+            <a href="/account/profile">Profile and account <span aria-hidden="true">→</span></a>
+        </div>
+    </section>
+
+    <div class="portal-frame">
+        <aside id="portalSidebar" class="portal-sidebar">
+            <div class="portal-sidebar-scroll">
+                <DashboardNavigation />
+            </div>
+            <button id="sidebarFooterToggle" class="portal-sidebar-footer-toggle" type="button" aria-label="Collapse navigation" title="Collapse navigation">
+                <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.4 4.8 7.2 10l5.2 5.2" /></svg>
+            </button>
+        </aside>
+
+        <div id="dashboardNavFlyout"
+             class="dashboard-nav-flyout"
+             aria-hidden="true"
+             aria-label="Dashboard submenu">
+            <div id="dashboardNavFlyoutContent" class="dashboard-nav-flyout-content"></div>
+        </div>
+
+        <main class="portal-content">
+            @Body
+        </main>
+    </div>
+</div>
+
+@code {
+    private static string GetInitial(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "U" : value[..1].ToUpperInvariant();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("Azunt.shells.dashboard.init");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("Azunt.shells.dashboard.dispose");
+        }
+        catch (JSDisconnectedException)
+        {
+            // The circuit is already gone; browser-side cleanup is no longer required.
+        }
+    }
+}

@@ -1,4 +1,6 @@
+using Azunt.Web.Components;
 using Azunt.Web.Data;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -7,6 +9,10 @@ using Azunt.Web.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services
+    .AddRazorComponents()
+    .AddInteractiveServerComponents();
+builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSingleton<MarkdownContentService>();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -101,6 +107,10 @@ if (Directory.Exists(localDocFxPath))
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseAntiforgery();
+
+app.MapRazorComponents<App>()
+    .AddInteractiveServerRenderMode();
 
 app.MapControllerRoute(
     name: "default",
