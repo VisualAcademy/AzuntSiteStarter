@@ -1,240 +1,269 @@
 (() => {
-  const compactStorageKey = 'azunt.portal.dashboard.sidebar.compact.v2';
-  const treeStorageKey = 'azunt.portal.dashboard.tree.classic.v2';
-  const body = document.body;
-  const sidebar = document.getElementById('portalSidebar');
-  const topToggle = document.getElementById('sidebarToggle');
-  const footerToggle = document.getElementById('sidebarFooterToggle');
-  const flyout = document.getElementById('dashboardNavFlyout');
-  const flyoutContent = document.getElementById('dashboardNavFlyoutContent');
-  const appLauncherToggle = document.getElementById('appLauncherToggle');
-  const appLauncherMenu = document.getElementById('appLauncherMenu');
-  const treeState = readTreeState();
+  'use strict';
 
-  if (localStorage.getItem(compactStorageKey) === 'true') {
-    body.classList.add('sidebar-collapsed');
-  }
+  window.Azunt = window.Azunt || {};
+  window.Azunt.shells = window.Azunt.shells || {};
 
-  initializeSourceTree();
-  syncToggleLabels();
+  let activeSidebar = null;
+  let activeController = null;
 
-  // Two separate controls:
-  // - top hamburger: slide the whole sidebar in/out
-  // - footer arrow: expanded sidebar <-> compact icon rail
-  topToggle?.addEventListener('click', toggleSidebarVisibility);
-  footerToggle?.addEventListener('click', toggleSidebarCompactness);
-  appLauncherToggle?.addEventListener('click', event => {
-    event.preventDefault();
-    event.stopPropagation();
-    toggleAppLauncher();
-  });
+  const init = () => {
+      const compactStorageKey = 'azunt.portal.dashboard.sidebar.compact.v2';
+      const treeStorageKey = 'azunt.portal.dashboard.tree.classic.v2';
+      const body = document.body;
+      const sidebar = document.getElementById('portalSidebar');
+      if (!sidebar) return;
 
-  document.addEventListener('click', event => {
-    const toggle = event.target.closest?.('[data-nav-toggle]');
-    if (toggle) {
-      event.preventDefault();
-      event.stopPropagation();
-      toggleNode(toggle);
-      return;
-    }
+      if (activeSidebar === sidebar) return;
+      activeController?.abort();
+      activeSidebar = sidebar;
+      activeController = new AbortController();
+      const { signal } = activeController;
+      const topToggle = document.getElementById('sidebarToggle');
+      const footerToggle = document.getElementById('sidebarFooterToggle');
+      const flyout = document.getElementById('dashboardNavFlyout');
+      const flyoutContent = document.getElementById('dashboardNavFlyoutContent');
+      const appLauncherToggle = document.getElementById('appLauncherToggle');
+      const appLauncherMenu = document.getElementById('appLauncherMenu');
+      const treeState = readTreeState();
 
-    const link = event.target.closest?.('[data-nav-primary-link]');
-    if (link && sidebar?.contains(link) && isCompactMode() && !isSidebarHidden()) {
-      const node = link.closest('[data-nav-node]');
-      if (node?.dataset.navDepth === '0' && node.dataset.navHasChildren === 'true') {
+      if (localStorage.getItem(compactStorageKey) === 'true') {
+        body.classList.add('sidebar-collapsed');
+      }
+
+      initializeSourceTree();
+      syncToggleLabels();
+
+      // Two separate controls:
+      // - top hamburger: slide the whole sidebar in/out
+      // - footer arrow: expanded sidebar <-> compact icon rail
+      topToggle?.addEventListener('click', toggleSidebarVisibility);
+      footerToggle?.addEventListener('click', toggleSidebarCompactness);
+      appLauncherToggle?.addEventListener('click', event => {
         event.preventDefault();
         event.stopPropagation();
-        openFlyout(node, link);
-        return;
+        toggleAppLauncher();
+      });
+
+      document.addEventListener('click', event => {
+        const toggle = event.target.closest?.('[data-nav-toggle]');
+        if (toggle) {
+          event.preventDefault();
+          event.stopPropagation();
+          toggleNode(toggle);
+          return;
+        }
+
+        const link = event.target.closest?.('[data-nav-primary-link]');
+        if (link && sidebar?.contains(link) && isCompactMode() && !isSidebarHidden()) {
+          const node = link.closest('[data-nav-node]');
+          if (node?.dataset.navDepth === '0' && node.dataset.navHasChildren === 'true') {
+            event.preventDefault();
+            event.stopPropagation();
+            openFlyout(node, link);
+            return;
+          }
+        }
+
+        if (flyout?.classList.contains('is-open') && !flyout.contains(event.target) && !sidebar?.contains(event.target)) {
+          closeFlyout();
+        }
+
+        if (appLauncherMenu?.classList.contains('is-open') && !appLauncherMenu.contains(event.target) && !appLauncherToggle?.contains(event.target)) {
+          closeAppLauncher();
+        }
+      }, { signal });
+
+      document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') {
+          closeFlyout();
+          closeAppLauncher();
+        }
+      }, { signal });
+
+      window.addEventListener('resize', () => {
+        if (!isCompactMode() || isSidebarHidden()) closeFlyout();
+      }, { signal });
+
+      function toggleSidebarVisibility() {
+        body.classList.toggle('sidebar-hidden');
+        closeFlyout();
+        closeAppLauncher();
+        syncToggleLabels();
       }
-    }
 
-    if (flyout?.classList.contains('is-open') && !flyout.contains(event.target) && !sidebar?.contains(event.target)) {
-      closeFlyout();
-    }
-
-    if (appLauncherMenu?.classList.contains('is-open') && !appLauncherMenu.contains(event.target) && !appLauncherToggle?.contains(event.target)) {
-      closeAppLauncher();
-    }
-  });
-
-  document.addEventListener('keydown', event => {
-    if (event.key === 'Escape') {
-      closeFlyout();
-      closeAppLauncher();
-    }
-  });
-
-  window.addEventListener('resize', () => {
-    if (!isCompactMode() || isSidebarHidden()) closeFlyout();
-  });
-
-  function toggleSidebarVisibility() {
-    body.classList.toggle('sidebar-hidden');
-    closeFlyout();
-    closeAppLauncher();
-    syncToggleLabels();
-  }
-
-  function toggleSidebarCompactness() {
-    const compact = body.classList.toggle('sidebar-collapsed');
-    closeAppLauncher();
-    localStorage.setItem(compactStorageKey, String(compact));
-    closeFlyout();
-    syncToggleLabels();
-  }
-
-  function syncToggleLabels() {
-    const hidden = isSidebarHidden();
-    const compact = body.classList.contains('sidebar-collapsed');
-
-    topToggle?.setAttribute('aria-expanded', String(!hidden));
-    topToggle?.setAttribute('aria-label', hidden ? 'Show navigation' : 'Hide navigation');
-    topToggle?.setAttribute('title', hidden ? 'Show navigation' : 'Hide navigation');
-
-    footerToggle?.setAttribute('aria-label', compact ? 'Expand navigation' : 'Collapse navigation');
-    footerToggle?.setAttribute('title', compact ? 'Expand navigation' : 'Collapse navigation');
-  }
-
-  function initializeSourceTree() {
-    sidebar?.querySelectorAll('[data-nav-toggle]').forEach(button => {
-      const node = button.closest('[data-nav-node]');
-      if (!node) return;
-      const key = node.dataset.navKey;
-      const children = directChildren(node);
-      if (!key || !children) return;
-
-      const active = node.dataset.activeBranch === 'true';
-      if (active) {
-        setExpanded(node, button, children, true);
-      } else if (Object.prototype.hasOwnProperty.call(treeState, key)) {
-        setExpanded(node, button, children, treeState[key] === true);
+      function toggleSidebarCompactness() {
+        const compact = body.classList.toggle('sidebar-collapsed');
+        closeAppLauncher();
+        localStorage.setItem(compactStorageKey, String(compact));
+        closeFlyout();
+        syncToggleLabels();
       }
-    });
-  }
 
-  function toggleNode(button) {
-    const node = button.closest('[data-nav-node]');
-    const children = node ? directChildren(node) : null;
-    if (!node || !children) return;
+      function syncToggleLabels() {
+        const hidden = isSidebarHidden();
+        const compact = body.classList.contains('sidebar-collapsed');
 
-    const expanded = button.getAttribute('aria-expanded') !== 'true';
-    setExpanded(node, button, children, expanded);
+        topToggle?.setAttribute('aria-expanded', String(!hidden));
+        topToggle?.setAttribute('aria-label', hidden ? 'Show navigation' : 'Hide navigation');
+        topToggle?.setAttribute('title', hidden ? 'Show navigation' : 'Hide navigation');
 
-    const key = node.dataset.navKey;
-    if (key) {
-      treeState[key] = expanded;
-      localStorage.setItem(treeStorageKey, JSON.stringify(treeState));
-      syncSourceNode(key, expanded, node);
-    }
-  }
-
-  function setExpanded(node, button, children, expanded) {
-    node.classList.toggle('is-expanded', expanded);
-    children.classList.toggle('is-collapsed', !expanded);
-    button.setAttribute('aria-expanded', String(expanded));
-  }
-
-  function directChildren(node) {
-    return Array.from(node.children).find(x => x.classList?.contains('dashboard-nav-children')) ?? null;
-  }
-
-  function syncSourceNode(key, expanded, origin) {
-    sidebar?.querySelectorAll(`[data-nav-node][data-nav-key="${cssEscape(key)}"]`).forEach(node => {
-      if (node === origin) return;
-      const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
-      const children = directChildren(node);
-      if (button && children) setExpanded(node, button, children, expanded);
-    });
-  }
-
-  function openFlyout(sourceNode, trigger) {
-    if (!flyout || !flyoutContent) return;
-
-    const clone = sourceNode.cloneNode(true);
-    clone.classList.add('flyout-root', 'is-expanded');
-    clone.removeAttribute('id');
-    clone.querySelectorAll('[id]').forEach(x => x.removeAttribute('id'));
-    clone.querySelectorAll('[aria-controls]').forEach(x => x.removeAttribute('aria-controls'));
-
-    const rootChildren = directChildren(clone);
-    if (rootChildren) rootChildren.classList.remove('is-collapsed');
-
-    flyoutContent.replaceChildren(clone);
-    applyStoredState(clone);
-
-    const rect = trigger.getBoundingClientRect();
-    const maxTop = window.innerHeight - 100;
-    flyout.style.top = `${Math.min(Math.max(rect.top, 56), maxTop)}px`;
-    flyout.classList.add('is-open');
-    flyout.setAttribute('aria-hidden', 'false');
-
-    requestAnimationFrame(() => {
-      const box = flyout.getBoundingClientRect();
-      if (box.bottom > window.innerHeight - 8) {
-        flyout.style.top = `${Math.max(56, window.innerHeight - box.height - 8)}px`;
+        footerToggle?.setAttribute('aria-label', compact ? 'Expand navigation' : 'Collapse navigation');
+        footerToggle?.setAttribute('title', compact ? 'Expand navigation' : 'Collapse navigation');
       }
-    });
-  }
 
-  function applyStoredState(root) {
-    root.querySelectorAll('[data-nav-node]').forEach(node => {
-      if (node.classList.contains('flyout-root')) return;
-      const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
-      const children = directChildren(node);
-      if (!button || !children) return;
+      function initializeSourceTree() {
+        sidebar?.querySelectorAll('[data-nav-toggle]').forEach(button => {
+          const node = button.closest('[data-nav-node]');
+          if (!node) return;
+          const key = node.dataset.navKey;
+          const children = directChildren(node);
+          if (!key || !children) return;
 
-      const key = node.dataset.navKey;
-      const active = node.dataset.activeBranch === 'true';
-      const expanded = active || (key && Object.prototype.hasOwnProperty.call(treeState, key) ? treeState[key] === true : false);
-      setExpanded(node, button, children, expanded);
-    });
-  }
+          const active = node.dataset.activeBranch === 'true';
+          if (active) {
+            setExpanded(node, button, children, true);
+          } else if (Object.prototype.hasOwnProperty.call(treeState, key)) {
+            setExpanded(node, button, children, treeState[key] === true);
+          }
+        });
+      }
 
-  function toggleAppLauncher() {
-    if (!appLauncherMenu || !appLauncherToggle) return;
+      function toggleNode(button) {
+        const node = button.closest('[data-nav-node]');
+        const children = node ? directChildren(node) : null;
+        if (!node || !children) return;
 
-    const open = !appLauncherMenu.classList.contains('is-open');
-    closeFlyout();
-    appLauncherMenu.classList.toggle('is-open', open);
-    appLauncherMenu.setAttribute('aria-hidden', String(!open));
-    appLauncherToggle.classList.toggle('is-open', open);
-    appLauncherToggle.setAttribute('aria-expanded', String(open));
-  }
+        const expanded = button.getAttribute('aria-expanded') !== 'true';
+        setExpanded(node, button, children, expanded);
 
-  function closeAppLauncher() {
-    if (!appLauncherMenu || !appLauncherToggle) return;
-    appLauncherMenu.classList.remove('is-open');
-    appLauncherMenu.setAttribute('aria-hidden', 'true');
-    appLauncherToggle.classList.remove('is-open');
-    appLauncherToggle.setAttribute('aria-expanded', 'false');
-  }
+        const key = node.dataset.navKey;
+        if (key) {
+          treeState[key] = expanded;
+          localStorage.setItem(treeStorageKey, JSON.stringify(treeState));
+          syncSourceNode(key, expanded, node);
+        }
+      }
 
-  function closeFlyout() {
-    if (!flyout || !flyoutContent) return;
-    flyout.classList.remove('is-open');
-    flyout.setAttribute('aria-hidden', 'true');
-    flyoutContent.replaceChildren();
-  }
+      function setExpanded(node, button, children, expanded) {
+        node.classList.toggle('is-expanded', expanded);
+        children.classList.toggle('is-collapsed', !expanded);
+        button.setAttribute('aria-expanded', String(expanded));
+      }
 
-  function isCompactMode() {
-    return body.classList.contains('sidebar-collapsed') || window.matchMedia('(max-width: 820px)').matches;
-  }
+      function directChildren(node) {
+        return Array.from(node.children).find(x => x.classList?.contains('dashboard-nav-children')) ?? null;
+      }
 
-  function isSidebarHidden() {
-    return body.classList.contains('sidebar-hidden');
-  }
+      function syncSourceNode(key, expanded, origin) {
+        sidebar?.querySelectorAll(`[data-nav-node][data-nav-key="${cssEscape(key)}"]`).forEach(node => {
+          if (node === origin) return;
+          const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
+          const children = directChildren(node);
+          if (button && children) setExpanded(node, button, children, expanded);
+        });
+      }
 
-  function readTreeState() {
-    try {
-      const value = JSON.parse(localStorage.getItem(treeStorageKey) ?? '{}');
-      return value && typeof value === 'object' ? value : {};
-    } catch {
-      return {};
-    }
-  }
+      function openFlyout(sourceNode, trigger) {
+        if (!flyout || !flyoutContent) return;
 
-  function cssEscape(value) {
-    return window.CSS?.escape ? CSS.escape(value) : value.replace(/[^a-zA-Z0-9_-]/g, '\\$&');
-  }
+        const clone = sourceNode.cloneNode(true);
+        clone.classList.add('flyout-root', 'is-expanded');
+        clone.removeAttribute('id');
+        clone.querySelectorAll('[id]').forEach(x => x.removeAttribute('id'));
+        clone.querySelectorAll('[aria-controls]').forEach(x => x.removeAttribute('aria-controls'));
+
+        const rootChildren = directChildren(clone);
+        if (rootChildren) rootChildren.classList.remove('is-collapsed');
+
+        flyoutContent.replaceChildren(clone);
+        applyStoredState(clone);
+
+        const rect = trigger.getBoundingClientRect();
+        const maxTop = window.innerHeight - 100;
+        flyout.style.top = `${Math.min(Math.max(rect.top, 56), maxTop)}px`;
+        flyout.classList.add('is-open');
+        flyout.setAttribute('aria-hidden', 'false');
+
+        requestAnimationFrame(() => {
+          const box = flyout.getBoundingClientRect();
+          if (box.bottom > window.innerHeight - 8) {
+            flyout.style.top = `${Math.max(56, window.innerHeight - box.height - 8)}px`;
+          }
+        });
+      }
+
+      function applyStoredState(root) {
+        root.querySelectorAll('[data-nav-node]').forEach(node => {
+          if (node.classList.contains('flyout-root')) return;
+          const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
+          const children = directChildren(node);
+          if (!button || !children) return;
+
+          const key = node.dataset.navKey;
+          const active = node.dataset.activeBranch === 'true';
+          const expanded = active || (key && Object.prototype.hasOwnProperty.call(treeState, key) ? treeState[key] === true : false);
+          setExpanded(node, button, children, expanded);
+        });
+      }
+
+      function toggleAppLauncher() {
+        if (!appLauncherMenu || !appLauncherToggle) return;
+
+        const open = !appLauncherMenu.classList.contains('is-open');
+        closeFlyout();
+        appLauncherMenu.classList.toggle('is-open', open);
+        appLauncherMenu.setAttribute('aria-hidden', String(!open));
+        appLauncherToggle.classList.toggle('is-open', open);
+        appLauncherToggle.setAttribute('aria-expanded', String(open));
+      }
+
+      function closeAppLauncher() {
+        if (!appLauncherMenu || !appLauncherToggle) return;
+        appLauncherMenu.classList.remove('is-open');
+        appLauncherMenu.setAttribute('aria-hidden', 'true');
+        appLauncherToggle.classList.remove('is-open');
+        appLauncherToggle.setAttribute('aria-expanded', 'false');
+      }
+
+      function closeFlyout() {
+        if (!flyout || !flyoutContent) return;
+        flyout.classList.remove('is-open');
+        flyout.setAttribute('aria-hidden', 'true');
+        flyoutContent.replaceChildren();
+      }
+
+      function isCompactMode() {
+        return body.classList.contains('sidebar-collapsed') || window.matchMedia('(max-width: 820px)').matches;
+      }
+
+      function isSidebarHidden() {
+        return body.classList.contains('sidebar-hidden');
+      }
+
+      function readTreeState() {
+        try {
+          const value = JSON.parse(localStorage.getItem(treeStorageKey) ?? '{}');
+          return value && typeof value === 'object' ? value : {};
+        } catch {
+          return {};
+        }
+      }
+
+      function cssEscape(value) {
+        return window.CSS?.escape ? CSS.escape(value) : value.replace(/[^a-zA-Z0-9_-]/g, '\\$&');
+      }
+  };
+
+  const dispose = () => {
+    activeController?.abort();
+    activeController = null;
+    activeSidebar = null;
+  };
+
+  window.Azunt.shells.dashboard = window.Azunt.shells.dashboard || {};
+  window.Azunt.shells.dashboard.init = init;
+  window.Azunt.shells.dashboard.dispose = dispose;
+
+  init();
 })();

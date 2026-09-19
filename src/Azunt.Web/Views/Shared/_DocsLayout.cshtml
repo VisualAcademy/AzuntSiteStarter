@@ -1,6 +1,8 @@
 @using Azunt.Web.Models.Markdown
+@using Azunt.Web.Models.Shells
 @{
     var docsModel = Model as MarkdownPageViewModel;
+    var shell = AzuntShellViewData.Resolve(ViewData, AzuntShellKind.Docs, User);
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -10,8 +12,9 @@
   <title>@ViewData["Title"] - Azunt Docs</title>
   <link rel="stylesheet" href="~/css/azunt-core.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/css/azunt-docs.css" asp-append-version="true" />
+  @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="docs-body">
+<body class="docs-body" data-az-shell="@shell.KindName" data-az-shell-mode="@shell.ModeName">
   <header class="docs-topbar">
     <a class="brand" href="/"><span class="brand-mark">A</span><span>Azunt</span></a>
     <a class="docs-name" href="/docs/">Docs</a>
@@ -87,5 +90,6 @@
   </div>
 
   <script src="~/js/azunt-docs.js" asp-append-version="true"></script>
+  @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

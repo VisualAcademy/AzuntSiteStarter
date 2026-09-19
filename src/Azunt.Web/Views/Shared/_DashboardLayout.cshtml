@@ -1,3 +1,7 @@
+@using Azunt.Web.Models.Shells
+@{
+    var shell = AzuntShellViewData.Resolve(ViewData, AzuntShellKind.Dashboard, User);
+}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,8 +10,9 @@
   <title>@ViewData["Title"] - Azunt Portal</title>
   <link rel="stylesheet" href="~/css/azunt-core.css" asp-append-version="true" />
   <link rel="stylesheet" href="~/css/azunt-dashboard.css" asp-append-version="true" />
+  @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="dashboard-body">
+<body class="dashboard-body" data-az-shell="@shell.KindName" data-az-shell-mode="@shell.ModeName">
   <header class="portal-topbar">
     <button id="appLauncherToggle"
             class="portal-app-launcher"

@@ -1,4 +1,5 @@
 using Azunt.Web.Models.Markdown;
+using Azunt.Web.Models.Shells;
 using Azunt.Web.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,8 @@ public sealed class DocsController(MarkdownContentService markdownContent) : Con
     [HttpGet("{*slug}")]
     public async Task<IActionResult> Private(string? slug)
     {
+        AzuntShellViewData.Set(ViewData, AzuntShellKind.Docs, AzuntShellMode.Private);
+
         var model = await markdownContent.GetFolderPageAsync(new MarkdownFolderPageRequest
         {
             ContentRoot = "ProtectedDocs",

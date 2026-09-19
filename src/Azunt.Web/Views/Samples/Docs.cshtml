@@ -1,0 +1,16 @@
+@using Azunt.Web.Models.Shells
+@{
+    Layout = "_DocsLayout";
+    ViewData["Title"] = "MVC Docs Shell";
+    var shell = AzuntShellViewData.Resolve(ViewData, AzuntShellKind.Docs, User);
+}
+<div class="docs-breadcrumb">
+  <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>MVC Docs</span>
+</div>
+<article class="markdown-body">
+  <h1>MVC Docs shell</h1>
+  <p>This page verifies the shared MVC documentation shell.</p>
+  <h2>Shell state</h2>
+  <p>Current mode: <code>@shell.ModeName</code></p>
+  <p>Authentication and authorization are intentionally independent from the visual shell mode.</p>
+</article>
