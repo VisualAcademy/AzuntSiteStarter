@@ -1,0 +1,14 @@
+@page
+@model Azunt.Web.Pages.Samples.Razor.Docs.AuthenticatedModel
+@{
+    ViewData["Title"] = "Razor Pages Authenticated Docs";
+    var shell = AzuntShellViewData.Resolve(ViewData, AzuntShellKind.Docs, User);
+}
+<div class="docs-breadcrumb">
+  <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>Authenticated Docs</span>
+</div>
+<article class="markdown-body">
+  <h1>Authenticated Docs</h1>
+  <p>This Razor Page requires an authenticated user while continuing to use the shared MVC Docs shell.</p>
+  <p>Current mode: <code>@shell.ModeName</code></p>
+</article>

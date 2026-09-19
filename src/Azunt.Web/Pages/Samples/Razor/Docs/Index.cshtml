@@ -1,0 +1,22 @@
+@page
+@model Azunt.Web.Pages.Samples.Razor.Docs.IndexModel
+@{
+    ViewData["Title"] = "Razor Pages Docs Shell";
+    var shell = AzuntShellViewData.Resolve(ViewData, AzuntShellKind.Docs, User);
+}
+<div class="docs-breadcrumb">
+  <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>Razor Pages Docs</span>
+</div>
+<article class="markdown-body">
+  <h1>Razor Pages Docs shell</h1>
+  <p>This public page verifies that Razor Pages can reuse the existing MVC documentation layout without copying it.</p>
+  <h2>Shell state</h2>
+  <p>Current mode: <code>@shell.ModeName</code></p>
+  <p>Authorization remains independent from the visual shell mode.</p>
+  <h2>Protected samples</h2>
+  <ul>
+    <li><a href="/samples/razor/docs/authenticated">Authenticated</a></li>
+    <li><a href="/samples/razor/docs/private">Private mode</a></li>
+    <li><a href="/samples/razor/docs/admin">Administrator mode</a></li>
+  </ul>
+</article>

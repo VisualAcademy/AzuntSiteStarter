@@ -1,0 +1,14 @@
+@page
+@model Azunt.Web.Pages.Samples.Razor.Docs.AdminModel
+@{
+    ViewData["Title"] = "Razor Pages Admin Docs";
+    var shell = AzuntShellViewData.Resolve(ViewData, AzuntShellKind.Docs, User);
+}
+<div class="docs-breadcrumb">
+  <a href="/">Azunt</a><span>/</span><span>Samples</span><span>/</span><span>Admin Docs</span>
+</div>
+<article class="markdown-body">
+  <h1>Administrator Docs mode</h1>
+  <p>This page requires the <code>Administrator</code> role and reuses the same MVC Docs layout.</p>
+  <p>Current mode: <code>@shell.ModeName</code></p>
+</article>

@@ -9,6 +9,7 @@ using Azunt.Web.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddRazorPages();
 builder.Services
     .AddRazorComponents()
     .AddInteractiveServerComponents();
@@ -111,6 +112,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
