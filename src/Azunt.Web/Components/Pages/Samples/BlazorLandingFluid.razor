@@ -1,0 +1,31 @@
+@page "/samples/blazor/landing-fluid"
+@layout LandingFluidLayout
+@attribute [AzuntShellModeAttribute(AzuntShellMode.Public)]
+
+<PageTitle>Blazor Landing Fluid Shell - Azunt</PageTitle>
+
+<section class="az-fluid-demo-hero">
+    <div class="shell-width az-fluid-demo-grid">
+        <div class="az-fluid-demo-copy">
+            <span class="eyebrow">Blazor Interactive Server</span>
+            <h1>Landing Fluid</h1>
+            <p>This landing page uses the full available viewport width instead of the standard 1180px container. Navigation, footer, and shell behavior are shared with Landing Container.</p>
+            <div class="az-fluid-demo-actions">
+                <button class="button button-primary" type="button" @onclick="Increment">Interactive clicks: @clickCount</button>
+                <a class="button button-quiet" href="/samples/blazor/landing">Compare Container</a>
+            </div>
+        </div>
+        <div class="az-fluid-demo-preview" aria-label="Full-width layout illustration">
+            <strong>Fluid-width content</strong>
+            <div class="az-fluid-demo-bars" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+    </div>
+</section>
+<section class="shell-width az-fluid-demo-note">
+    Resize the browser to verify that the header, content, and footer expand with the viewport while keeping responsive side gutters.
+</section>
+
+@code {
+    private int clickCount;
+    private void Increment() => clickCount++;
+}

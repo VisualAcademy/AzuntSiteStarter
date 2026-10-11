@@ -20,6 +20,14 @@ public sealed class SamplesController : Controller
     }
 
     [AllowAnonymous]
+    [HttpGet("landing-fluid")]
+    public IActionResult LandingFluid()
+    {
+        AzuntShellViewData.Set(ViewData, AzuntShellKind.Landing, AzuntShellMode.Public);
+        return View();
+    }
+
+    [AllowAnonymous]
     [HttpGet("docs")]
     public IActionResult Docs()
     {

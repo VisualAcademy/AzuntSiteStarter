@@ -1,0 +1,36 @@
+@using Azunt.Web.Models.Shells
+@{
+    // Keep the Landing shell kind/mode contract identical to _PublicLayout.
+    var shell = AzuntShellViewData.Resolve(ViewData, AzuntShellKind.Landing, User);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>@ViewData["Title"] - Azunt</title>
+  @if (ViewData["CanonicalUrl"] is string canonicalUrl && !string.IsNullOrWhiteSpace(canonicalUrl))
+  {
+    var canonicalHref = canonicalUrl.StartsWith("http", StringComparison.OrdinalIgnoreCase)
+      ? canonicalUrl
+      : $"{Context.Request.Scheme}://{Context.Request.Host}{canonicalUrl}";
+    <link rel="canonical" href="@canonicalHref" />
+  }
+  <link rel="stylesheet" href="~/css/azunt-core.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/azunt-landing.css" asp-append-version="true" />
+  <link rel="stylesheet" href="~/css/azunt-landing-fluid.css" asp-append-version="true" />
+  @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="public-body public-body--fluid"
+      data-az-shell="@shell.KindName"
+      data-az-shell-layout="fluid"
+      data-az-shell-mode="@shell.ModeName">
+  <partial name="_PublicHeader" />
+  <main>
+    @RenderBody()
+  </main>
+  <partial name="_PublicFooter" />
+  <script src="~/js/azunt-landing.js" asp-append-version="true"></script>
+  @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

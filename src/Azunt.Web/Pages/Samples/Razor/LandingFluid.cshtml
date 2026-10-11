@@ -1,0 +1,26 @@
+@page "/samples/razor/landing-fluid"
+@model Azunt.Web.Pages.Samples.Razor.LandingFluidModel
+@{
+    Layout = "/Views/Shared/_PublicFluidLayout.cshtml";
+    ViewData["Title"] = "Razor Pages Landing Fluid Shell";
+}
+<section class="az-fluid-demo-hero">
+  <div class="shell-width az-fluid-demo-grid">
+    <div class="az-fluid-demo-copy">
+      <span class="eyebrow">ASP.NET Core Razor Pages</span>
+      <h1>Landing Fluid</h1>
+      <p>Razor Pages selects the same fluid layout as MVC. Only the page layout changes; the shared header, footer, styles, and scripts remain intact.</p>
+      <div class="az-fluid-demo-actions">
+        <a class="button button-primary" href="/samples/razor/landing">Compare Container</a>
+        <a class="button button-quiet" href="/samples/mvc/landing-fluid">MVC Fluid</a>
+      </div>
+    </div>
+    <div class="az-fluid-demo-preview" aria-label="Full-width layout illustration">
+      <strong>Fluid-width content</strong>
+      <div class="az-fluid-demo-bars" aria-hidden="true"><span></span><span></span><span></span></div>
+    </div>
+  </div>
+</section>
+<section class="shell-width az-fluid-demo-note">
+  Resize the browser to verify that the header, content, and footer expand with the viewport while keeping responsive side gutters.
+</section>

@@ -1,0 +1,40 @@
+@inherits AzuntShellLayoutBase
+@implements IAsyncDisposable
+@inject IJSRuntime JS
+
+@* Same header/footer and landing navigation behavior as LandingLayout.
+   Only the content width changes via azunt-landing-fluid.css. *@
+<HeadContent>
+    <link rel="stylesheet" href="/css/azunt-landing.css" />
+    <link rel="stylesheet" href="/css/azunt-landing-fluid.css" />
+</HeadContent>
+
+<div class="public-body public-body--fluid"
+     data-az-shell="landing"
+     data-az-shell-layout="fluid"
+     data-az-shell-mode="@ShellModeName">
+    <PublicHeader />
+    <main>
+        @Body
+    </main>
+    <PublicFooter />
+</div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JS.InvokeVoidAsync("Azunt.shells.landing.init");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("Azunt.shells.landing.dispose");
+        }
+        catch (JSDisconnectedException)
+        {
+            // The circuit has disconnected; browser-side cleanup is no longer required.
+        }
+    }
+}

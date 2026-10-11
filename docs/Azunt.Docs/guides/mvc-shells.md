@@ -20,3 +20,57 @@ Public, dashboard, and account pages are served by ASP.NET Core MVC. Public docs
 - Account pages handle sign-in, registration, and profile actions.
 
 Brand assets, authentication, and shared components can be moved to a Razor Class Library when reuse across projects is needed.
+
+## Landing width variants (MVC, Razor Pages, and Blazor)
+
+Landing has two presentation options. Neither changes ASP.NET Core authorization
+or the shell modes (Public, Authenticated, Private, Admin).
+
+| Variant | Blazor | MVC / Razor Pages |
+| --- | --- | --- |
+| Container (default) | `Components/Layout/LandingLayout.razor` | `Views/Shared/_PublicLayout.cshtml` |
+| Fluid | `Components/Layout/LandingFluidLayout.razor` | `Views/Shared/_PublicFluidLayout.cshtml` |
+
+The Container variant keeps the existing `.shell-width` max-width of 1180px. The
+Fluid variant loads `azunt-landing-fluid.css`, which removes this max-width only
+within `.public-body--fluid`; side gutters remain responsive. Sections may
+retain full-bleed backgrounds. The header, footer, login/navigation interactions
+and existing JavaScript are shared.
+
+### Select a layout
+
+Blazor component:
+
+```razor
+@page "/my-landing"
+@layout LandingFluidLayout
+```
+
+MVC view:
+
+```cshtml
+@{ Layout = "_PublicFluidLayout"; }
+```
+
+Razor Page:
+
+```cshtml
+@page
+@{ Layout = "/Views/Shared/_PublicFluidLayout.cshtml"; }
+```
+
+To use the original container layout, choose `LandingLayout` or `_PublicLayout`
+instead. In Fluid pages, wrap section content with `.shell-width`; for
+readable constrained subsections, add a nested `.shell-constrained`.
+
+### Visual smoke tests
+
+| Technology | Container | Fluid |
+| --- | --- | --- |
+| Blazor | `/samples/blazor/landing` | `/samples/blazor/landing-fluid` |
+| MVC | `/samples/mvc/landing` | `/samples/mvc/landing-fluid` |
+| Razor Pages | `/samples/razor/landing` | `/samples/razor/landing-fluid` |
+
+Test desktop (over 1180px), tablet, mobile, menu toggling, sign-in/out links,
+and Blazor counter interactivity. All existing routes still select Container
+unless they explicitly opt into Fluid.
