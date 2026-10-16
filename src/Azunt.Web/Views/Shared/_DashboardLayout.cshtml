@@ -101,9 +101,36 @@
 
   <div class="portal-frame">
     <aside id="portalSidebar" class="portal-sidebar">
+      <div class="portal-sidebar-tools" role="group" aria-label="Navigation tools">
+        <button id="dashboardNavSearchToggle" class="portal-sidebar-tool" type="button"
+                aria-label="Search menus" title="Search menus"
+                aria-controls="dashboardNavSearchPanel" aria-expanded="false">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.6" cy="8.6" r="5.5"/><path d="m13 13 4.4 4.4"/></svg>
+          <span>Search</span>
+        </button>
+        <button id="dashboardNavCollapseAll" class="portal-sidebar-tool" type="button"
+                aria-label="Collapse all menu groups" title="Collapse all menu groups">
+          <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 15.8h14M3 4.2h14m-11 8.3 4-4 4 4"/></svg>
+          <span>Collapse All</span>
+        </button>
+      </div>
       <div class="portal-sidebar-scroll">
         @await Component.InvokeAsync("DashboardNavigation")
       </div>
+      <nav class="portal-sidebar-fixed-links" aria-label="Quick shortcuts">
+        <a href="#" class="portal-sidebar-fixed-link is-hawaso" data-placeholder-link title="Hawaso" aria-label="Hawaso">
+          <span class="portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#webapp"></use></svg></span>
+          <span class="portal-sidebar-fixed-text">Hawaso</span>
+        </a>
+        <a href="#" class="portal-sidebar-fixed-link is-dotnetnote" data-placeholder-link title="DotNetNote" aria-label="DotNetNote">
+          <span class="portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#devops"></use></svg></span>
+          <span class="portal-sidebar-fixed-text">DotNetNote</span>
+        </a>
+        <a href="#" class="portal-sidebar-fixed-link is-visualacademy" data-placeholder-link title="VisualAcademy" aria-label="VisualAcademy">
+          <span class="portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#wireframe"></use></svg></span>
+          <span class="portal-sidebar-fixed-text">VisualAcademy</span>
+        </a>
+      </nav>
       <button id="sidebarFooterToggle" class="portal-sidebar-footer-toggle" type="button" aria-label="Collapse navigation" title="Collapse navigation">
         <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.4 4.8 7.2 10l5.2 5.2" /></svg>
       </button>
@@ -115,6 +142,17 @@
          aria-label="Dashboard submenu">
       <div id="dashboardNavFlyoutContent" class="dashboard-nav-flyout-content"></div>
     </div>
+
+    <section id="dashboardNavSearchPanel" class="dashboard-nav-search-panel" hidden
+             role="dialog" aria-label="Search dashboard menus">
+      <div class="dashboard-nav-search-title">
+        <strong>Search menus</strong>
+        <button type="button" id="dashboardNavSearchClose" aria-label="Close menu search" title="Close">×</button>
+      </div>
+      <label class="dashboard-nav-search-label" for="dashboardNavSearchInput">Find a menu</label>
+      <input id="dashboardNavSearchInput" type="search" autocomplete="off" placeholder="Search navigation..." />
+      <div id="dashboardNavSearchResults" class="dashboard-nav-search-results" role="status" aria-live="polite"></div>
+    </section>
 
     <main class="portal-content">
       @RenderBody()

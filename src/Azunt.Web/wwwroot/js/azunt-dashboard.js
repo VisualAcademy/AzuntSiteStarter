@@ -6,6 +6,7 @@
 
   let activeSidebar = null;
   let activeController = null;
+  let activeRefresh = null;
 
   const init = () => {
       const compactStorageKey = 'azunt.portal.dashboard.sidebar.compact.v2';
@@ -15,7 +16,11 @@
       const sidebar = shellRoot?.querySelector('#portalSidebar') || document.getElementById('portalSidebar');
       if (!sidebar) return;
 
-      if (activeSidebar === sidebar) return;
+      if (activeSidebar === sidebar) {
+        // Blazor can rerender its navigation without recreating the layout.
+        activeRefresh?.();
+        return;
+      }
       activeController?.abort();
       activeSidebar = sidebar;
       activeController = new AbortController();
@@ -26,20 +31,40 @@
       const flyoutContent = document.getElementById('dashboardNavFlyoutContent');
       const appLauncherToggle = document.getElementById('appLauncherToggle');
       const appLauncherMenu = document.getElementById('appLauncherMenu');
+      const searchToggle = sidebar.querySelector('#dashboardNavSearchToggle');
+      const collapseAllButton = sidebar.querySelector('#dashboardNavCollapseAll');
+      const searchPanel = shellRoot?.querySelector('#dashboardNavSearchPanel') || document.getElementById('dashboardNavSearchPanel');
+      const searchCloseButton = searchPanel?.querySelector('#dashboardNavSearchClose');
+      const searchInput = searchPanel?.querySelector('#dashboardNavSearchInput');
+      const searchResults = searchPanel?.querySelector('#dashboardNavSearchResults');
       const treeState = readTreeState();
 
       if (localStorage.getItem(compactStorageKey) === 'true') {
         body.classList.add('sidebar-collapsed');
       }
 
+      activeRefresh = initializeSourceTree;
       initializeSourceTree();
       syncToggleLabels();
 
       // Two separate controls:
       // - top hamburger: slide the whole sidebar in/out
       // - footer arrow: expanded sidebar <-> compact icon rail
-      topToggle?.addEventListener('click', toggleSidebarVisibility);
-      footerToggle?.addEventListener('click', toggleSidebarCompactness);
+      topToggle?.addEventListener('click', toggleSidebarVisibility, { signal });
+      footerToggle?.addEventListener('click', toggleSidebarCompactness, { signal });
+      searchToggle?.addEventListener('click', event => {
+        event.preventDefault();
+        toggleSearch();
+      }, { signal });
+      collapseAllButton?.addEventListener('click', event => {
+        event.preventDefault();
+        collapseAllMenus();
+      }, { signal });
+      searchCloseButton?.addEventListener('click', () => closeSearch(true), { signal });
+      searchInput?.addEventListener('input', renderSearchResults, { signal });
+      searchResults?.addEventListener('click', event => {
+        if (event.target.closest?.('a.dashboard-nav-search-result')) closeSearch();
+      }, { signal });
       appLauncherToggle?.addEventListener('click', event => {
         event.preventDefault();
         event.stopPropagation();
@@ -47,6 +72,18 @@
       });
 
       document.addEventListener('click', event => {
+        const placeholderLink = event.target.closest?.('[data-placeholder-link]');
+        if (placeholderLink && sidebar.contains(placeholderLink)) {
+          // Starter-only decorative shortcuts: destination URLs are not configured yet.
+          event.preventDefault();
+          return;
+        }
+
+        if (searchPanel && !searchPanel.hidden &&
+            !searchPanel.contains(event.target) && !searchToggle?.contains(event.target)) {
+          closeSearch();
+        }
+
         const toggle = event.target.closest?.('[data-nav-toggle]');
         if (toggle) {
           event.preventDefault();
@@ -79,6 +116,7 @@
         if (event.key === 'Escape') {
           closeFlyout();
           closeAppLauncher();
+          if (searchPanel && !searchPanel.hidden) closeSearch(true);
         }
       }, { signal });
 
@@ -90,12 +128,14 @@
         body.classList.toggle('sidebar-hidden');
         closeFlyout();
         closeAppLauncher();
+        closeSearch();
         syncToggleLabels();
       }
 
       function toggleSidebarCompactness() {
         const compact = body.classList.toggle('sidebar-collapsed');
         closeAppLauncher();
+        closeSearch();
         localStorage.setItem(compactStorageKey, String(compact));
         closeFlyout();
         syncToggleLabels();
@@ -121,11 +161,11 @@
           const children = directChildren(node);
           if (!key || !children) return;
 
-          const active = node.dataset.activeBranch === 'true';
-          if (active) {
-            setExpanded(node, button, children, true);
-          } else if (Object.prototype.hasOwnProperty.call(treeState, key)) {
+          // Explicit user choices (including Collapse All) override the active branch.
+          if (Object.prototype.hasOwnProperty.call(treeState, key)) {
             setExpanded(node, button, children, treeState[key] === true);
+          } else if (node.dataset.activeBranch === 'true') {
+            setExpanded(node, button, children, true);
           }
         });
       }
@@ -203,9 +243,95 @@
 
           const key = node.dataset.navKey;
           const active = node.dataset.activeBranch === 'true';
-          const expanded = active || (key && Object.prototype.hasOwnProperty.call(treeState, key) ? treeState[key] === true : false);
+          const expanded = key && Object.prototype.hasOwnProperty.call(treeState, key) ? treeState[key] === true : active;
           setExpanded(node, button, children, expanded);
         });
+      }
+
+      function collapseAllMenus() {
+        sidebar.querySelectorAll('[data-nav-node][data-nav-has-children="true"]').forEach(node => {
+          const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
+          const children = directChildren(node);
+          const key = node.dataset.navKey;
+          if (!button || !children) return;
+          setExpanded(node, button, children, false);
+          if (key) treeState[key] = false;
+        });
+        localStorage.setItem(treeStorageKey, JSON.stringify(treeState));
+        closeFlyout();
+        closeSearch();
+      }
+
+      function toggleSearch() {
+        if (!searchPanel || !searchToggle || !searchInput) return;
+        if (!searchPanel.hidden) { closeSearch(true); return; }
+        closeFlyout();
+        closeAppLauncher();
+        searchPanel.hidden = false;
+        searchToggle.setAttribute('aria-expanded', 'true');
+        searchInput.value = '';
+        renderSearchResults();
+        searchInput.focus();
+      }
+
+      function closeSearch(returnFocus = false) {
+        if (!searchPanel || searchPanel.hidden) return;
+        searchPanel.hidden = true;
+        searchToggle?.setAttribute('aria-expanded', 'false');
+        if (returnFocus) searchToggle?.focus();
+      }
+
+      function renderSearchResults() {
+        if (!searchInput || !searchResults) return;
+        const query = searchInput.value.trim().toLocaleLowerCase();
+        searchResults.replaceChildren();
+        if (!query) {
+          const hint = document.createElement('div');
+          hint.className = 'dashboard-nav-search-empty';
+          hint.textContent = 'Enter a menu name to search.';
+          searchResults.append(hint);
+          return;
+        }
+
+        // Search the server-rendered navigation only: no hidden/unauthorized
+        // entries are imported from the catalog, and placeholders are excluded.
+        let count = 0;
+        const maxResults = 30;
+        sidebar.querySelectorAll('.dashboard-nav [data-nav-node]').forEach(node => {
+          if (count >= maxResults) return;
+          const link = node.querySelector(':scope > .dashboard-nav-row > [data-nav-primary-link]');
+          if (!link) return;
+          const title = link.querySelector('.dashboard-nav-text')?.textContent?.trim() || link.textContent.trim();
+          const url = link.getAttribute('href');
+          if (!url || url === '#') return;
+          const crumbs = [];
+          let parent = node.parentElement?.closest('[data-nav-node]');
+          while (parent) {
+            const parentLink = parent.querySelector(':scope > .dashboard-nav-row > [data-nav-primary-link]');
+            const label = parentLink?.querySelector('.dashboard-nav-text')?.textContent?.trim();
+            if (label) crumbs.unshift(label);
+            parent = parent.parentElement?.closest('[data-nav-node]');
+          }
+          const path = [...crumbs, title].join(' / ');
+          if (!path.toLocaleLowerCase().includes(query)) return;
+          const result = document.createElement('a');
+          result.className = 'dashboard-nav-search-result';
+          result.href = url;
+          result.textContent = title;
+          if (crumbs.length) {
+            const subtitle = document.createElement('small');
+            subtitle.textContent = crumbs.join(' / ');
+            result.append(subtitle);
+          }
+          searchResults.append(result);
+          count++;
+        });
+        if (count === 0) {
+          const empty = document.createElement('div');
+          empty.className = 'dashboard-nav-search-empty';
+          empty.textContent = 'No matching menus.';
+          searchResults.append(empty);
+        }
       }
 
       function toggleAppLauncher() {
@@ -260,6 +386,7 @@
     activeController?.abort();
     activeController = null;
     activeSidebar = null;
+    activeRefresh = null;
   };
 
   window.Azunt.shells.dashboard = window.Azunt.shells.dashboard || {};
