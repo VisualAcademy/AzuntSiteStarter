@@ -88,3 +88,34 @@
   }
   .public-body--fluid .az-fluid-demo-grid { grid-template-columns: minmax(0, 1fr); }
 }
+
+/* Fluid navigation alone: compact menus instead of full-width mega panels.
+   Scoped by the opt-in header class to preserve the Container navigation. */
+@media (min-width: 961px) {
+  .az-site-header--fluid .az-nav-item--dropdown > .az-dropdown {
+    width: 286px;
+    max-height: calc(100dvh - var(--az-nav-height) - 16px);
+    overflow-y: auto;
+    overflow-x: visible;
+    border-radius: 0 0 5px 5px;
+  }
+  /* Overflow must remain visible for nested flyouts. Only the nested list
+     itself scrolls if it becomes taller than the current viewport. */
+  .az-site-header--fluid .az-nav-item--dropdown > .az-dropdown:has(.az-dropdown-nested) {
+    max-height: none;
+    overflow: visible;
+  }
+  .az-site-header--fluid .az-dropdown-submenu {
+    max-height: calc(100dvh - var(--az-nav-height) - 16px);
+    overflow-y: auto;
+  }
+  .az-site-header--fluid .az-dropdown-link { min-height: 50px; }
+  .az-site-header--fluid .az-dropdown-submenu a { min-height: 46px; }
+  .az-site-header--fluid .az-nav-item.is-open > .az-top-link {
+    box-shadow: inset 0 -2px 0 #0067b8;
+  }
+}
+@media (max-width: 960px) {
+  .az-site-header--fluid .az-dropdown-submenu { max-height: none; overflow: visible; }
+  .az-site-header--fluid .az-dropdown { max-width: none !important; transform: none !important; }
+}

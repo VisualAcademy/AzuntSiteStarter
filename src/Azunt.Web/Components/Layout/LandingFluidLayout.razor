@@ -2,8 +2,7 @@
 @implements IAsyncDisposable
 @inject IJSRuntime JS
 
-@* Same header/footer and landing navigation behavior as LandingLayout.
-   Only the content width changes via azunt-landing-fluid.css. *@
+@* Fluid uses its own header and dropdown catalog; Container stays unchanged. *@
 <HeadContent>
     <link rel="stylesheet" href="/css/azunt-landing.css" />
     <link rel="stylesheet" href="/css/azunt-landing-fluid.css" />
@@ -13,7 +12,7 @@
      data-az-shell="landing"
      data-az-shell-layout="fluid"
      data-az-shell-mode="@ShellModeName">
-    <PublicHeader />
+    <PublicFluidHeader />
     <main>
         @Body
     </main>
