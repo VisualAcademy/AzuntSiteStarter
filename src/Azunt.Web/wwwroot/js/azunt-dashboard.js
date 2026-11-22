@@ -40,7 +40,7 @@
       const treeState = readTreeState();
 
       if (localStorage.getItem(compactStorageKey) === 'true') {
-        body.classList.add('sidebar-collapsed');
+        body.classList.add('az-sidebar-collapsed');
       }
 
       activeRefresh = initializeSourceTree;
@@ -63,7 +63,7 @@
       searchCloseButton?.addEventListener('click', () => closeSearch(true), { signal });
       searchInput?.addEventListener('input', renderSearchResults, { signal });
       searchResults?.addEventListener('click', event => {
-        if (event.target.closest?.('a.dashboard-nav-search-result')) closeSearch();
+        if (event.target.closest?.('a.az-dashboard-nav-search-result')) closeSearch();
       }, { signal });
       appLauncherToggle?.addEventListener('click', event => {
         event.preventDefault();
@@ -103,11 +103,11 @@
           }
         }
 
-        if (flyout?.classList.contains('is-open') && !flyout.contains(event.target) && !sidebar?.contains(event.target)) {
+        if (flyout?.classList.contains('az-is-open') && !flyout.contains(event.target) && !sidebar?.contains(event.target)) {
           closeFlyout();
         }
 
-        if (appLauncherMenu?.classList.contains('is-open') && !appLauncherMenu.contains(event.target) && !appLauncherToggle?.contains(event.target)) {
+        if (appLauncherMenu?.classList.contains('az-is-open') && !appLauncherMenu.contains(event.target) && !appLauncherToggle?.contains(event.target)) {
           closeAppLauncher();
         }
       }, { signal });
@@ -125,7 +125,7 @@
       }, { signal });
 
       function toggleSidebarVisibility() {
-        body.classList.toggle('sidebar-hidden');
+        body.classList.toggle('az-sidebar-hidden');
         closeFlyout();
         closeAppLauncher();
         closeSearch();
@@ -133,7 +133,7 @@
       }
 
       function toggleSidebarCompactness() {
-        const compact = body.classList.toggle('sidebar-collapsed');
+        const compact = body.classList.toggle('az-sidebar-collapsed');
         closeAppLauncher();
         closeSearch();
         localStorage.setItem(compactStorageKey, String(compact));
@@ -143,7 +143,7 @@
 
       function syncToggleLabels() {
         const hidden = isSidebarHidden();
-        const compact = body.classList.contains('sidebar-collapsed');
+        const compact = body.classList.contains('az-sidebar-collapsed');
 
         topToggle?.setAttribute('aria-expanded', String(!hidden));
         topToggle?.setAttribute('aria-label', hidden ? 'Show navigation' : 'Hide navigation');
@@ -187,8 +187,8 @@
       }
 
       function setExpanded(node, button, children, expanded) {
-        node.classList.toggle('is-expanded', expanded);
-        children.classList.toggle('is-collapsed', !expanded);
+        node.classList.toggle('az-is-expanded', expanded);
+        children.classList.toggle('az-is-collapsed', !expanded);
         button.setAttribute('aria-expanded', String(expanded));
       }
 
@@ -199,7 +199,7 @@
       function syncSourceNode(key, expanded, origin) {
         sidebar?.querySelectorAll(`[data-nav-node][data-nav-key="${cssEscape(key)}"]`).forEach(node => {
           if (node === origin) return;
-          const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
+          const button = node.querySelector(':scope > .az-dashboard-nav-row > [data-nav-toggle]');
           const children = directChildren(node);
           if (button && children) setExpanded(node, button, children, expanded);
         });
@@ -209,13 +209,13 @@
         if (!flyout || !flyoutContent) return;
 
         const clone = sourceNode.cloneNode(true);
-        clone.classList.add('flyout-root', 'is-expanded');
+        clone.classList.add('az-flyout-root', 'az-is-expanded');
         clone.removeAttribute('id');
         clone.querySelectorAll('[id]').forEach(x => x.removeAttribute('id'));
         clone.querySelectorAll('[aria-controls]').forEach(x => x.removeAttribute('aria-controls'));
 
         const rootChildren = directChildren(clone);
-        if (rootChildren) rootChildren.classList.remove('is-collapsed');
+        if (rootChildren) rootChildren.classList.remove('az-is-collapsed');
 
         flyoutContent.replaceChildren(clone);
         applyStoredState(clone);
@@ -223,7 +223,7 @@
         const rect = trigger.getBoundingClientRect();
         const maxTop = window.innerHeight - 100;
         flyout.style.top = `${Math.min(Math.max(rect.top, 56), maxTop)}px`;
-        flyout.classList.add('is-open');
+        flyout.classList.add('az-is-open');
         flyout.setAttribute('aria-hidden', 'false');
 
         requestAnimationFrame(() => {
@@ -236,8 +236,8 @@
 
       function applyStoredState(root) {
         root.querySelectorAll('[data-nav-node]').forEach(node => {
-          if (node.classList.contains('flyout-root')) return;
-          const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
+          if (node.classList.contains('az-flyout-root')) return;
+          const button = node.querySelector(':scope > .az-dashboard-nav-row > [data-nav-toggle]');
           const children = directChildren(node);
           if (!button || !children) return;
 
@@ -250,7 +250,7 @@
 
       function collapseAllMenus() {
         sidebar.querySelectorAll('[data-nav-node][data-nav-has-children="true"]').forEach(node => {
-          const button = node.querySelector(':scope > .dashboard-nav-row > [data-nav-toggle]');
+          const button = node.querySelector(':scope > .az-dashboard-nav-row > [data-nav-toggle]');
           const children = directChildren(node);
           const key = node.dataset.navKey;
           if (!button || !children) return;
@@ -287,7 +287,7 @@
         searchResults.replaceChildren();
         if (!query) {
           const hint = document.createElement('div');
-          hint.className = 'dashboard-nav-search-empty';
+          hint.className = 'az-dashboard-nav-search-empty';
           hint.textContent = 'Enter a menu name to search.';
           searchResults.append(hint);
           return;
@@ -297,25 +297,25 @@
         // entries are imported from the catalog, and placeholders are excluded.
         let count = 0;
         const maxResults = 30;
-        sidebar.querySelectorAll('.dashboard-nav [data-nav-node]').forEach(node => {
+        sidebar.querySelectorAll('.az-dashboard-nav [data-nav-node]').forEach(node => {
           if (count >= maxResults) return;
-          const link = node.querySelector(':scope > .dashboard-nav-row > [data-nav-primary-link]');
+          const link = node.querySelector(':scope > .az-dashboard-nav-row > [data-nav-primary-link]');
           if (!link) return;
-          const title = link.querySelector('.dashboard-nav-text')?.textContent?.trim() || link.textContent.trim();
+          const title = link.querySelector('.az-dashboard-nav-text')?.textContent?.trim() || link.textContent.trim();
           const url = link.getAttribute('href');
           if (!url || url === '#') return;
           const crumbs = [];
           let parent = node.parentElement?.closest('[data-nav-node]');
           while (parent) {
-            const parentLink = parent.querySelector(':scope > .dashboard-nav-row > [data-nav-primary-link]');
-            const label = parentLink?.querySelector('.dashboard-nav-text')?.textContent?.trim();
+            const parentLink = parent.querySelector(':scope > .az-dashboard-nav-row > [data-nav-primary-link]');
+            const label = parentLink?.querySelector('.az-dashboard-nav-text')?.textContent?.trim();
             if (label) crumbs.unshift(label);
             parent = parent.parentElement?.closest('[data-nav-node]');
           }
           const path = [...crumbs, title].join(' / ');
           if (!path.toLocaleLowerCase().includes(query)) return;
           const result = document.createElement('a');
-          result.className = 'dashboard-nav-search-result';
+          result.className = 'az-dashboard-nav-search-result';
           result.href = url;
           result.textContent = title;
           if (crumbs.length) {
@@ -328,7 +328,7 @@
         });
         if (count === 0) {
           const empty = document.createElement('div');
-          empty.className = 'dashboard-nav-search-empty';
+          empty.className = 'az-dashboard-nav-search-empty';
           empty.textContent = 'No matching menus.';
           searchResults.append(empty);
         }
@@ -337,35 +337,35 @@
       function toggleAppLauncher() {
         if (!appLauncherMenu || !appLauncherToggle) return;
 
-        const open = !appLauncherMenu.classList.contains('is-open');
+        const open = !appLauncherMenu.classList.contains('az-is-open');
         closeFlyout();
-        appLauncherMenu.classList.toggle('is-open', open);
+        appLauncherMenu.classList.toggle('az-is-open', open);
         appLauncherMenu.setAttribute('aria-hidden', String(!open));
-        appLauncherToggle.classList.toggle('is-open', open);
+        appLauncherToggle.classList.toggle('az-is-open', open);
         appLauncherToggle.setAttribute('aria-expanded', String(open));
       }
 
       function closeAppLauncher() {
         if (!appLauncherMenu || !appLauncherToggle) return;
-        appLauncherMenu.classList.remove('is-open');
+        appLauncherMenu.classList.remove('az-is-open');
         appLauncherMenu.setAttribute('aria-hidden', 'true');
-        appLauncherToggle.classList.remove('is-open');
+        appLauncherToggle.classList.remove('az-is-open');
         appLauncherToggle.setAttribute('aria-expanded', 'false');
       }
 
       function closeFlyout() {
         if (!flyout || !flyoutContent) return;
-        flyout.classList.remove('is-open');
+        flyout.classList.remove('az-is-open');
         flyout.setAttribute('aria-hidden', 'true');
         flyoutContent.replaceChildren();
       }
 
       function isCompactMode() {
-        return body.classList.contains('sidebar-collapsed') || window.matchMedia('(max-width: 820px)').matches;
+        return body.classList.contains('az-sidebar-collapsed') || window.matchMedia('(max-width: 820px)').matches;
       }
 
       function isSidebarHidden() {
-        return body.classList.contains('sidebar-hidden');
+        return body.classList.contains('az-sidebar-hidden');
       }
 
       function readTreeState() {

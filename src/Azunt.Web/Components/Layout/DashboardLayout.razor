@@ -6,42 +6,42 @@
     <link rel="stylesheet" href="/css/azunt-dashboard.css" />
 </HeadContent>
 
-<div class="dashboard-body" style="min-height:100vh" data-az-shell="dashboard" data-az-shell-mode="@ShellModeName">
-    <header class="portal-topbar">
+<div class="az-dashboard-body" style="min-height:100vh" data-az-shell="dashboard" data-az-shell-mode="@ShellModeName">
+    <header class="az-portal-topbar">
         <button id="appLauncherToggle"
-                class="portal-app-launcher"
+                class="az-portal-app-launcher"
                 type="button"
                 aria-label="Open Azunt apps"
                 aria-controls="appLauncherMenu"
                 aria-expanded="false"
                 title="Apps">
-            <span class="portal-waffle" aria-hidden="true">
+            <span class="az-portal-waffle" aria-hidden="true">
                 <span></span><span></span><span></span>
                 <span></span><span></span><span></span>
                 <span></span><span></span><span></span>
             </span>
         </button>
-        <a class="portal-brand" href="/dashboard"><span class="brand-mark small">A</span><span>Azunt Portal</span></a>
-        <button id="sidebarToggle" class="portal-hamburger" type="button" aria-label="Hide navigation" title="Hide navigation" aria-expanded="true">
+        <a class="az-portal-brand" href="/dashboard"><span class="az-brand-mark az-small">A</span><span>Azunt Portal</span></a>
+        <button id="sidebarToggle" class="az-portal-hamburger" type="button" aria-label="Hide navigation" title="Hide navigation" aria-expanded="true">
             <span></span><span></span><span></span>
         </button>
-        <nav class="portal-shortcuts" aria-label="Portal shortcuts">
+        <nav class="az-portal-shortcuts" aria-label="Portal shortcuts">
             <a href="/dashboard">⌂ Dashboard</a>
             <a href="/dashboard/resources">＋ Resources</a>
             <a href="/docs/">Docs</a>
         </nav>
-        <div class="portal-actions">
+        <div class="az-portal-actions">
             <a href="/">Public site</a>
             <AuthorizeView Context="auth">
                 <Authorized>
-                    <a class="avatar" href="/account/profile">@GetInitial(auth.User.Identity?.Name)</a>
+                    <a class="az-avatar" href="/account/profile">@GetInitial(auth.User.Identity?.Name)</a>
                 </Authorized>
             </AuthorizeView>
         </div>
     </header>
 
-    <section id="appLauncherMenu" class="portal-app-menu" aria-hidden="true" aria-label="Azunt apps">
-        <div class="portal-app-menu-header">
+    <section id="appLauncherMenu" class="az-portal-app-menu" aria-hidden="true" aria-label="Azunt apps">
+        <div class="az-portal-app-menu-header">
             <div>
                 <strong>Azunt</strong>
                 <span>Sites and tools</span>
@@ -49,47 +49,47 @@
             <a href="/">Home</a>
         </div>
 
-        <nav class="portal-app-grid" aria-label="Azunt applications">
-            <a class="portal-app-item" href="/">
-                <span class="portal-app-icon app-icon-home"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#home"></use></svg></span>
+        <nav class="az-portal-app-grid" aria-label="Azunt applications">
+            <a class="az-portal-app-item" href="/">
+                <span class="az-portal-app-icon az-app-icon-home"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#home"></use></svg></span>
                 <span>Public site</span>
             </a>
-            <a class="portal-app-item" href="/dashboard">
-                <span class="portal-app-icon app-icon-dashboard"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#dashboard"></use></svg></span>
+            <a class="az-portal-app-item" href="/dashboard">
+                <span class="az-portal-app-icon az-app-icon-dashboard"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#dashboard"></use></svg></span>
                 <span>Dashboard</span>
             </a>
-            <a class="portal-app-item" href="/dashboard/resources">
-                <span class="portal-app-icon app-icon-resources"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#resources"></use></svg></span>
+            <a class="az-portal-app-item" href="/dashboard/resources">
+                <span class="az-portal-app-icon az-app-icon-resources"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#resources"></use></svg></span>
                 <span>Resources</span>
             </a>
-            <a class="portal-app-item" href="/courses">
-                <span class="portal-app-icon app-icon-courses"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#courses"></use></svg></span>
+            <a class="az-portal-app-item" href="/courses">
+                <span class="az-portal-app-icon az-app-icon-courses"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#courses"></use></svg></span>
                 <span>Courses</span>
             </a>
-            <a class="portal-app-item" href="/docs/">
-                <span class="portal-app-icon app-icon-docs"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#docs"></use></svg></span>
+            <a class="az-portal-app-item" href="/docs/">
+                <span class="az-portal-app-icon az-app-icon-docs"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#docs"></use></svg></span>
                 <span>Documentation</span>
             </a>
-            <a class="portal-app-item" href="/docs/private/">
-                <span class="portal-app-icon app-icon-protected"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#shield"></use></svg></span>
+            <a class="az-portal-app-item" href="/docs/private/">
+                <span class="az-portal-app-icon az-app-icon-protected"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#shield"></use></svg></span>
                 <span>Protected docs</span>
             </a>
-            <a class="portal-app-item" href="/account/profile">
-                <span class="portal-app-icon app-icon-account"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#account"></use></svg></span>
+            <a class="az-portal-app-item" href="/account/profile">
+                <span class="az-portal-app-icon az-app-icon-account"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#account"></use></svg></span>
                 <span>Account</span>
             </a>
-            <a class="portal-app-item" href="/products">
-                <span class="portal-app-icon app-icon-products"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#products"></use></svg></span>
+            <a class="az-portal-app-item" href="/products">
+                <span class="az-portal-app-icon az-app-icon-products"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#products"></use></svg></span>
                 <span>Products</span>
             </a>
-            <a class="portal-app-item" href="/pricing">
-                <span class="portal-app-icon app-icon-pricing"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#pricing"></use></svg></span>
+            <a class="az-portal-app-item" href="/pricing">
+                <span class="az-portal-app-icon az-app-icon-pricing"><svg aria-hidden="true"><use href="/images/dashboard-icons.svg#pricing"></use></svg></span>
                 <span>Pricing</span>
             </a>
         </nav>
 
-        <div class="portal-app-menu-divider"></div>
-        <div class="portal-app-quick-links">
+        <div class="az-portal-app-menu-divider"></div>
+        <div class="az-portal-app-quick-links">
             <a href="/dashboard/resources">Browse resources <span aria-hidden="true">→</span></a>
             <a href="/courses/aspnet-core">Browse courses <span aria-hidden="true">→</span></a>
             <a href="/docs/getting-started/site-structure">Getting started <span aria-hidden="true">→</span></a>
@@ -97,68 +97,68 @@
         </div>
     </section>
 
-    <div class="portal-frame">
-        <aside id="portalSidebar" class="portal-sidebar">
+    <div class="az-portal-frame">
+        <aside id="portalSidebar" class="az-portal-sidebar">
             
-            <div class="portal-sidebar-tools" role="group" aria-label="Navigation tools">
-                <button id="dashboardNavSearchToggle" class="portal-sidebar-tool" type="button"
+            <div class="az-portal-sidebar-tools" role="group" aria-label="Navigation tools">
+                <button id="dashboardNavSearchToggle" class="az-portal-sidebar-tool" type="button"
                         aria-label="Search menus" title="Search menus"
                         aria-controls="dashboardNavSearchPanel" aria-expanded="false">
                     <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.6" cy="8.6" r="5.5"/><path d="m13 13 4.4 4.4"/></svg>
                     <span>Search</span>
                 </button>
-                <button id="dashboardNavCollapseAll" class="portal-sidebar-tool" type="button"
+                <button id="dashboardNavCollapseAll" class="az-portal-sidebar-tool" type="button"
                         aria-label="Collapse all menu groups" title="Collapse all menu groups">
                     <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 15.8h14M3 4.2h14m-11 8.3 4-4 4 4"/></svg>
                     <span>Collapse All</span>
                 </button>
             </div>
-            <div class="portal-sidebar-scroll">
+            <div class="az-portal-sidebar-scroll">
                 <DashboardNavigation />
             </div>
             
-            <nav class="portal-sidebar-fixed-links" aria-label="Quick shortcuts">
-                <a href="#" class="portal-sidebar-fixed-link is-hawaso" data-placeholder-link
+            <nav class="az-portal-sidebar-fixed-links" aria-label="Quick shortcuts">
+                <a href="#" class="az-portal-sidebar-fixed-link az-is-hawaso" data-placeholder-link
                    title="Hawaso" aria-label="Hawaso">
-                    <span class="portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#webapp"></use></svg></span>
-                    <span class="portal-sidebar-fixed-text">Hawaso</span>
+                    <span class="az-portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#webapp"></use></svg></span>
+                    <span class="az-portal-sidebar-fixed-text">Hawaso</span>
                 </a>
-                <a href="#" class="portal-sidebar-fixed-link is-dotnetnote" data-placeholder-link
+                <a href="#" class="az-portal-sidebar-fixed-link az-is-dotnetnote" data-placeholder-link
                    title="DotNetNote" aria-label="DotNetNote">
-                    <span class="portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#devops"></use></svg></span>
-                    <span class="portal-sidebar-fixed-text">DotNetNote</span>
+                    <span class="az-portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#devops"></use></svg></span>
+                    <span class="az-portal-sidebar-fixed-text">DotNetNote</span>
                 </a>
-                <a href="#" class="portal-sidebar-fixed-link is-visualacademy" data-placeholder-link
+                <a href="#" class="az-portal-sidebar-fixed-link az-is-visualacademy" data-placeholder-link
                    title="VisualAcademy" aria-label="VisualAcademy">
-                    <span class="portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#wireframe"></use></svg></span>
-                    <span class="portal-sidebar-fixed-text">VisualAcademy</span>
+                    <span class="az-portal-sidebar-fixed-icon" aria-hidden="true"><svg viewBox="0 0 20 20"><use href="/images/dashboard-icons.svg#wireframe"></use></svg></span>
+                    <span class="az-portal-sidebar-fixed-text">VisualAcademy</span>
                 </a>
             </nav>
-            <button id="sidebarFooterToggle" class="portal-sidebar-footer-toggle" type="button" aria-label="Collapse navigation" title="Collapse navigation">
+            <button id="sidebarFooterToggle" class="az-portal-sidebar-footer-toggle" type="button" aria-label="Collapse navigation" title="Collapse navigation">
                 <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.4 4.8 7.2 10l5.2 5.2" /></svg>
             </button>
         </aside>
 
         <div id="dashboardNavFlyout"
-             class="dashboard-nav-flyout"
+             class="az-dashboard-nav-flyout"
              aria-hidden="true"
              aria-label="Dashboard submenu">
-            <div id="dashboardNavFlyoutContent" class="dashboard-nav-flyout-content"></div>
+            <div id="dashboardNavFlyoutContent" class="az-dashboard-nav-flyout-content"></div>
         </div>
 
         
-        <section id="dashboardNavSearchPanel" class="dashboard-nav-search-panel" hidden
+        <section id="dashboardNavSearchPanel" class="az-dashboard-nav-search-panel" hidden
                  role="dialog" aria-label="Search dashboard menus">
-            <div class="dashboard-nav-search-title">
+            <div class="az-dashboard-nav-search-title">
                 <strong>Search menus</strong>
                 <button type="button" id="dashboardNavSearchClose" aria-label="Close menu search" title="Close">×</button>
             </div>
-            <label class="dashboard-nav-search-label" for="dashboardNavSearchInput">Find a menu</label>
+            <label class="az-dashboard-nav-search-label" for="dashboardNavSearchInput">Find a menu</label>
             <input id="dashboardNavSearchInput" type="search" autocomplete="off" placeholder="Search navigation..." />
-            <div id="dashboardNavSearchResults" class="dashboard-nav-search-results" role="status" aria-live="polite"></div>
+            <div id="dashboardNavSearchResults" class="az-dashboard-nav-search-results" role="status" aria-live="polite"></div>
         </section>
 
-        <main class="portal-content">
+        <main class="az-portal-content">
             @Body
         </main>
     </div>

@@ -3,12 +3,12 @@
     Layout = "_AccountLayout";
     ViewData["Title"] = "Profile";
 }
-<div class="account-card profile-card">
-  <span class="account-kicker">Account</span>
-  <div class="profile-avatar">@((Model?.Email ?? "U")[0].ToString().ToUpperInvariant())</div>
+<div class="az-account-card az-profile-card">
+  <span class="az-account-kicker">Account</span>
+  <div class="az-profile-avatar">@((Model?.Email ?? "U")[0].ToString().ToUpperInvariant())</div>
   <h1>@(Model?.Email)</h1>
   <p>ASP.NET Core Identity is using the EF Core InMemory provider for this local site.</p>
-  <dl class="profile-list"><div><dt>User ID</dt><dd>@(Model?.Id)</dd></div><div><dt>Email confirmed</dt><dd>@(Model?.EmailConfirmed)</dd></div><div><dt>Storage</dt><dd>EF Core InMemory</dd></div></dl>
-  <div class="profile-actions"><a class="button button-primary" href="/dashboard">Open dashboard</a><a class="button button-outline" href="/docs/private/">Protected docs</a></div>
-  <form method="post" action="/account/logout" class="logout-form">@Html.AntiForgeryToken()<button class="text-action danger" type="submit">Sign out</button></form>
+  <dl class="az-profile-list"><div><dt>User ID</dt><dd>@(Model?.Id)</dd></div><div><dt>Email confirmed</dt><dd>@(Model?.EmailConfirmed)</dd></div><div><dt>Storage</dt><dd>EF Core InMemory</dd></div></dl>
+  <div class="az-profile-actions"><a class="az-button az-button-primary" href="/dashboard">Open dashboard</a><a class="az-button az-button-outline" href="/docs/private/">Protected docs</a></div>
+  <form method="post" action="/account/logout" class="az-logout-form">@Html.AntiForgeryToken()<button class="az-text-action az-danger" type="submit">Sign out</button></form>
 </div>

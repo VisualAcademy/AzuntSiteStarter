@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="~/css/azunt-landing.css" asp-append-version="true" />
   @await RenderSectionAsync("Styles", required: false)
 </head>
-<body class="public-body" data-az-shell="@shell.KindName" data-az-shell-mode="@shell.ModeName">
+<body class="az-public-body" data-az-shell="@shell.KindName" data-az-shell-mode="@shell.ModeName">
   <partial name="_PublicHeader" />
   <main>
     @RenderBody()

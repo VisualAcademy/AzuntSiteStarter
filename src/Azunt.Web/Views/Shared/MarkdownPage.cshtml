@@ -10,12 +10,12 @@
   <link rel="stylesheet" href="~/css/azunt-docs.css" asp-append-version="true" />
 }
 
-<div class="markdown-public-container shell-width">
-  <div class="markdown-docs-frame @(hasNavigation ? string.Empty : "without-navigation")">
+<div class="az-markdown-public-container az-shell-width">
+  <div class="az-markdown-docs-frame @(hasNavigation ? string.Empty : "az-without-navigation")">
     @if (hasNavigation)
     {
-      <aside class="markdown-docs-sidebar" aria-label="Local documentation navigation">
-        <div class="markdown-docs-sidebar-heading">
+      <aside class="az-markdown-docs-sidebar" aria-label="Local documentation navigation">
+        <div class="az-markdown-docs-sidebar-heading">
           @if (!string.IsNullOrWhiteSpace(Model.RootUrl))
           {
             <a href="@Model.RootUrl">@Model.RootTitle</a>
@@ -29,7 +29,7 @@
             <span>@Model.NavigationTitle</span>
           }
         </div>
-        <nav class="markdown-tree">
+        <nav class="az-markdown-tree">
           @foreach (var item in Model.Navigation)
           {
             <partial name="_MarkdownNavNode" model="item" />
@@ -38,10 +38,10 @@
       </aside>
     }
 
-    <main class="markdown-docs-content">
+    <main class="az-markdown-docs-content">
       @if (Model.Breadcrumbs.Count > 0)
       {
-        <nav class="markdown-breadcrumb" aria-label="Breadcrumb">
+        <nav class="az-markdown-breadcrumb" aria-label="Breadcrumb">
           @for (var i = 0; i < Model.Breadcrumbs.Count; i++)
           {
             var item = Model.Breadcrumbs[i];
@@ -61,19 +61,19 @@
         </nav>
       }
 
-      <article class="markdown-content-body">
+      <article class="az-markdown-content-body">
         @Html.Raw(Model.Html)
       </article>
     </main>
 
-    <aside class="markdown-docs-affix" aria-label="On this page">
+    <aside class="az-markdown-docs-affix" aria-label="On this page">
       @if (Model.OnThisPage.Count > 0)
       {
-        <div class="markdown-docs-affix-title">On this page</div>
+        <div class="az-markdown-docs-affix-title">On this page</div>
         <nav>
           @foreach (var heading in Model.OnThisPage)
           {
-            <a class="@(heading.Level == 3 ? "level-3" : string.Empty)" href="#@heading.Id">@heading.Text</a>
+            <a class="@(heading.Level == 3 ? "az-level-3" : string.Empty)" href="#@heading.Id">@heading.Text</a>
           }
         </nav>
       }

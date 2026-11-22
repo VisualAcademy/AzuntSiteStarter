@@ -73,11 +73,11 @@ The MVC application keeps shared primitives separate from area-specific presenta
 
 ```text
 wwwroot/css/
-├─ azunt-core.css        shared design tokens and primitives
-├─ azunt-landing.css     public / landing pages and navigation
-├─ azunt-docs.css        MVC documentation and Markdown content
-├─ azunt-dashboard.css   authenticated dashboard / portal
-└─ azunt-account.css     sign-in, registration, and profile pages
+├─ azunt-core.az-css        shared design tokens and primitives
+├─ azunt-landing.az-css     public / landing pages and navigation
+├─ azunt-docs.az-css        MVC documentation and Markdown content
+├─ azunt-dashboard.az-css   authenticated dashboard / portal
+└─ azunt-account.az-css     sign-in, registration, and profile pages
 
 wwwroot/js/
 ├─ azunt-landing.js      public navigation and landing interactions
@@ -85,7 +85,7 @@ wwwroot/js/
 └─ azunt-dashboard.js    dashboard navigation and app launcher
 ```
 
-DocFX keeps `templates/azunt/public/main.css` and `main.js` only as required template entry points. Their maintained implementation lives in the adjacent `azunt-docs.css` and `azunt-docs.js` files.
+DocFX keeps `templates/azunt/public/main.az-css` and `main.js` only as required template entry points. Their maintained implementation lives in the adjacent `azunt-docs.az-css` and `azunt-docs.js` files.
 
 ## MarkdownContentService
 
@@ -166,7 +166,7 @@ navigation/toc.yml      left TreeView
 
 ## Courses in the public layout
 
-Markdown under `docs/Azunt.Docs/courses` is rendered inside `_PublicLayout.cshtml`. The public header and footer are retained, while the documentation body stays inside the same `shell-width` container used by landing pages.
+Markdown under `docs/Azunt.Docs/courses` is rendered inside `_PublicLayout.cshtml`. The public header and footer are retained, while the documentation body stays inside the same `az-shell-width` container used by landing pages.
 
 ```text
 Public header

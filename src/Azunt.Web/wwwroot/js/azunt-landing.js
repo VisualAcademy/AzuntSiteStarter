@@ -60,13 +60,13 @@
       const fitStandardDropdownToViewport = panel => {
         if (!panel?.classList.contains('az-dropdown') || !isDesktop()) return;
 
-        panel.classList.remove('is-edge-aligned');
+        panel.classList.remove('az-is-edge-aligned');
         panel.style.removeProperty('transform');
         panel.style.maxWidth = `calc(100vw - ${viewportGutter * 2}px)`;
 
         let rect = panel.getBoundingClientRect();
         if (rect.right > window.innerWidth - viewportGutter) {
-          panel.classList.add('is-edge-aligned');
+          panel.classList.add('az-is-edge-aligned');
           rect = panel.getBoundingClientRect();
         }
 
@@ -84,7 +84,7 @@
       const fitFlyoutToViewport = details => {
         if (!details || !isDesktop()) return;
 
-        details.classList.remove('is-flyout-left');
+        details.classList.remove('az-is-flyout-left');
         const submenu = details.querySelector('.az-dropdown-submenu');
         if (!submenu) return;
 
@@ -93,7 +93,7 @@
 
         let rect = submenu.getBoundingClientRect();
         if (rect.right > window.innerWidth - viewportGutter) {
-          details.classList.add('is-flyout-left');
+          details.classList.add('az-is-flyout-left');
           rect = submenu.getBoundingClientRect();
         }
 
@@ -111,7 +111,7 @@
 
       const resetNestedTabs = item => {
         item?.querySelectorAll('[data-az-tabs]').forEach(tabs => {
-          tabs.classList.remove('is-mobile-tab-open');
+          tabs.classList.remove('az-is-mobile-tab-open');
         });
 
         item?.querySelectorAll('details[data-az-dropdown-nested][open]').forEach(details => {
@@ -125,7 +125,7 @@
         const trigger = menu.querySelector('[data-az-action-trigger]');
         const panel = trigger ? getPanel(trigger) : null;
 
-        menu.classList.remove('is-open');
+        menu.classList.remove('az-is-open');
         trigger?.setAttribute('aria-expanded', 'false');
         if (panel) panel.hidden = true;
 
@@ -144,7 +144,7 @@
         const trigger = item.querySelector('[data-az-menu-trigger]');
         const panel = trigger ? getPanel(trigger) : null;
 
-        item.classList.remove('is-open');
+        item.classList.remove('az-is-open');
         trigger?.setAttribute('aria-expanded', 'false');
         if (panel) panel.hidden = true;
         resetNestedTabs(item);
@@ -153,10 +153,10 @@
       };
 
       const syncHeaderState = () => {
-        const openItems = menuItems.filter(item => item.classList.contains('is-open'));
+        const openItems = menuItems.filter(item => item.classList.contains('az-is-open'));
         const hasOpenMegaMenu = openItems.some(item => item.querySelector('.az-mega:not([hidden])'));
-        header.classList.toggle('has-open-menu', hasOpenMegaMenu && isDesktop());
-        primaryNav?.classList.toggle('is-submenu-open', openItems.length > 0 && !isDesktop());
+        header.classList.toggle('az-has-open-menu', hasOpenMegaMenu && isDesktop());
+        primaryNav?.classList.toggle('az-is-submenu-open', openItems.length > 0 && !isDesktop());
       };
 
       const closeAllMenus = (exceptItem = null) => {
@@ -173,7 +173,7 @@
 
         closeAllActionMenus();
         closeAllMenus(item);
-        item.classList.add('is-open');
+        item.classList.add('az-is-open');
         trigger.setAttribute('aria-expanded', 'true');
         panel.hidden = false;
         fitStandardDropdownToViewport(panel);
@@ -191,7 +191,7 @@
         trigger.addEventListener('click', event => {
           event.preventDefault();
           const item = trigger.closest('[data-az-menu-item]');
-          const isOpen = item?.classList.contains('is-open');
+          const isOpen = item?.classList.contains('az-is-open');
 
           if (isOpen) {
             closeMenu(item);
@@ -215,7 +215,7 @@
         if (!primaryNav || !navToggle) return;
 
         if (open) closeAllActionMenus();
-        primaryNav.classList.toggle('is-open', open);
+        primaryNav.classList.toggle('az-is-open', open);
         navToggle.setAttribute('aria-expanded', String(open));
         navToggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
         primaryNav.setAttribute('aria-hidden', String(!open && !isDesktop()));
@@ -235,7 +235,7 @@
       };
 
       navToggle?.addEventListener('click', () => {
-        setMobileNav(!primaryNav?.classList.contains('is-open'));
+        setMobileNav(!primaryNav?.classList.contains('az-is-open'));
       });
 
       actionTriggers.forEach(trigger => {
@@ -247,7 +247,7 @@
           const panel = getPanel(trigger);
           if (!menu || !panel) return;
 
-          const opening = !menu.classList.contains('is-open');
+          const opening = !menu.classList.contains('az-is-open');
           closeAllActionMenus(menu);
 
           if (!opening) {
@@ -255,12 +255,12 @@
             return;
           }
 
-          if (!isDesktop() && primaryNav?.classList.contains('is-open')) {
+          if (!isDesktop() && primaryNav?.classList.contains('az-is-open')) {
             setMobileNav(false);
           }
           closeAllMenus();
 
-          menu.classList.add('is-open');
+          menu.classList.add('az-is-open');
           trigger.setAttribute('aria-expanded', 'true');
           panel.hidden = false;
         });
@@ -268,7 +268,7 @@
 
       header.querySelectorAll('details[data-az-dropdown-nested]').forEach(details => {
         details.addEventListener('toggle', () => {
-          details.classList.remove('is-flyout-left');
+          details.classList.remove('az-is-flyout-left');
           if (!details.open) return;
 
           const owner = details.closest('.az-dropdown-list');
@@ -294,17 +294,17 @@
       document.addEventListener('keydown', event => {
         if (event.key !== 'Escape') return;
 
-        const openActionMenu = actionMenus.find(menu => menu.classList.contains('is-open'));
+        const openActionMenu = actionMenus.find(menu => menu.classList.contains('az-is-open'));
         if (openActionMenu) {
           closeActionMenu(openActionMenu, true);
           return;
         }
 
-        const openItem = menuItems.find(item => item.classList.contains('is-open'));
+        const openItem = menuItems.find(item => item.classList.contains('az-is-open'));
         if (openItem) {
-          const openTabs = openItem.querySelector('[data-az-tabs].is-mobile-tab-open');
+          const openTabs = openItem.querySelector('[data-az-tabs].az-is-mobile-tab-open');
           if (!isDesktop() && openTabs) {
-            openTabs.classList.remove('is-mobile-tab-open');
+            openTabs.classList.remove('az-is-mobile-tab-open');
             openTabs.querySelector('[role="tab"][aria-selected="true"]')?.focus();
             return;
           }
@@ -314,7 +314,7 @@
           return;
         }
 
-        if (!isDesktop() && primaryNav?.classList.contains('is-open')) {
+        if (!isDesktop() && primaryNav?.classList.contains('az-is-open')) {
           setMobileNav(false, true);
         }
       }, { signal });
@@ -336,7 +336,7 @@
           <strong>${tabLabel}</strong>`;
 
         heading.querySelector('.az-mobile-tab-back').addEventListener('click', () => {
-          tabs.classList.remove('is-mobile-tab-open');
+          tabs.classList.remove('az-is-mobile-tab-open');
           primaryNav?.scrollTo({ top: 0, behavior: 'auto' });
           tabs.querySelector('[role="tab"][aria-selected="true"]')?.focus({ preventScroll: true });
         });
@@ -355,7 +355,7 @@
         const activateTab = (button, focus = false, enterMobilePanel = false) => {
           buttons.forEach(tab => {
             const selected = tab === button;
-            tab.classList.toggle('is-active', selected);
+            tab.classList.toggle('az-is-active', selected);
             tab.setAttribute('aria-selected', String(selected));
             tab.tabIndex = selected ? 0 : -1;
 
@@ -369,7 +369,7 @@
 
           if (!isDesktop() && enterMobilePanel && activePanel) {
             createMobileTabHeading(activePanel, menuLabel, button.textContent.trim(), tabs);
-            tabs.classList.add('is-mobile-tab-open');
+            tabs.classList.add('az-is-mobile-tab-open');
             primaryNav?.scrollTo({ top: 0, behavior: 'auto' });
             window.requestAnimationFrame(() => {
               activePanel.querySelector('.az-mobile-tab-back')?.focus({ preventScroll: true });
@@ -413,12 +413,12 @@
         if (!primaryNav || !navToggle) return;
 
         if (isDesktop()) {
-          primaryNav.classList.remove('is-open');
+          primaryNav.classList.remove('az-is-open');
           primaryNav.removeAttribute('aria-hidden');
           navToggle.setAttribute('aria-expanded', 'false');
           navToggle.setAttribute('aria-label', 'Open navigation');
         } else {
-          primaryNav.classList.remove('is-open');
+          primaryNav.classList.remove('az-is-open');
           primaryNav.setAttribute('aria-hidden', 'true');
           navToggle.setAttribute('aria-expanded', 'false');
           navToggle.setAttribute('aria-label', 'Open navigation');
@@ -437,7 +437,7 @@
         if (!isDesktop()) return;
         window.cancelAnimationFrame(resizeFrame);
         resizeFrame = window.requestAnimationFrame(() => {
-          const openItem = menuItems.find(item => item.classList.contains('is-open'));
+          const openItem = menuItems.find(item => item.classList.contains('az-is-open'));
           const openPanel = openItem?.querySelector('.az-dropdown:not([hidden])');
           if (openPanel) fitStandardDropdownToViewport(openPanel);
 

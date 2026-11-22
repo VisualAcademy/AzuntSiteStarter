@@ -1,8 +1,8 @@
 @implements IDisposable
 @inject NavigationManager Navigation
 
-<nav class="dashboard-nav" aria-label="Dashboard navigation">
-    <ul class="dashboard-nav-root">
+<nav class="az-dashboard-nav" aria-label="Dashboard navigation">
+    <ul class="az-dashboard-nav-root">
         @{ string? currentGroup = null; }
         @foreach (var item in Model.Items)
         {
@@ -11,7 +11,7 @@
                 currentGroup = item.Group;
                 if (!string.IsNullOrWhiteSpace(currentGroup))
                 {
-                    <li class="dashboard-nav-section-label" aria-hidden="true">@currentGroup</li>
+                    <li class="az-dashboard-nav-section-label" aria-hidden="true">@currentGroup</li>
                 }
             }
 

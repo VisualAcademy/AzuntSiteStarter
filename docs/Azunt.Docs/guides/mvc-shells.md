@@ -31,9 +31,9 @@ or the shell modes (Public, Authenticated, Private, Admin).
 | Container (default) | `Components/Layout/LandingLayout.razor` | `Views/Shared/_PublicLayout.cshtml` |
 | Fluid | `Components/Layout/LandingFluidLayout.razor` | `Views/Shared/_PublicFluidLayout.cshtml` |
 
-The Container variant keeps the existing `.shell-width` max-width of 1180px. The
-Fluid variant loads `azunt-landing-fluid.css`, which removes this max-width only
-within `.public-body--fluid`; side gutters remain responsive. Sections may
+The Container variant keeps the existing `.az-shell-width` max-width of 1180px. The
+Fluid variant loads `azunt-landing-fluid.az-css`, which removes this max-width only
+within `.az-public-body--fluid`; side gutters remain responsive. Sections may
 retain full-bleed backgrounds. The header, footer, login/navigation interactions
 and existing JavaScript are shared.
 
@@ -60,8 +60,8 @@ Razor Page:
 ```
 
 To use the original container layout, choose `LandingLayout` or `_PublicLayout`
-instead. In Fluid pages, wrap section content with `.shell-width`; for
-readable constrained subsections, add a nested `.shell-constrained`.
+instead. In Fluid pages, wrap section content with `.az-shell-width`; for
+readable constrained subsections, add a nested `.az-shell-constrained`.
 
 ### Visual smoke tests
 
